@@ -1,4 +1,7 @@
+const express = require("express");
 const User = require("../modules/user.model");
+const Token = require("../modules/token.model");
+const bcrypt = require('bcryptjs');
 
 
 
@@ -26,7 +29,29 @@ exports.signup = async(req, res) => {
 
 
 // login 
-exports.login = async(req, res) => {}
+exports.login = async(req, res) => {
+    const {email, password} = req.body;
+    if(!email||!password){
+        return res.status(400).json({message: "All fields are required"});
+    }
+    try{
+      const user = await User.findOne({email});
+      if(!user){
+        return res.status(401).json({message: "User not found"});
+      }
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+      if(!isPasswordCorrect){
+        return res.status(401).json({message: "Incorrect password"});
+      }
+      if(user && isPasswordCorrect){
+        // const token = jwt.sign({email: user.email, id: user._id}, "test", {expiresIn: "1h"});
+        res.status(200).json({result: user});
+      }
+    }
+    catch(err){
+        res.status(500).json({message: err.message});
+    }
+}
 
 
 //refrash token
@@ -34,7 +59,11 @@ exports.refrashToken = async(req, res) => {}
 
 
 // logout
-exports.logout = async(req, res) => {}
+exports.logout = async(req, res) => {
+    const {token} = req.body;
+    await Token.findOneAndDelete({token});
+    res.status(200).json({message: "Logged out"});
+}
 
 
 
