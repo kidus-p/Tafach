@@ -1,5 +1,5 @@
-const exports = require("express");
-const route = exports.Router();
+const express = require("express");
+const route = express.Router();
 const {signup} = require("../controllers/userController")
 
 
