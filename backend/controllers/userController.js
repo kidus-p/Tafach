@@ -2,6 +2,45 @@ const express = require("express");
 const User = require("../modules/user.model");
 const Token = require("../modules/token.model");
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+
+
+// generate token
+const generateToken = (userId) => {
+    return jwt.sign({userId}, process.env.SECRET_KEY, {expiresIn: '1h'});
+}
+
+
+//generate refrash token
+const generateRefrashToken = async (userId) => {
+    const token = jwt.sign({userId}, process.env.REFRASH_SECRET_KEY, {expiresIn: '7d'});
+    await Token.create({userId, token});
+    return token
+}
+
+
+
+//generate email verification token
+const generateEmailToken = (userId) => {
+    return jwt.sign({userId}, process.env.EMAIL_SECRET_KEY, {expiresIn: '1h'});
+}
+
+
+
+// create transporter
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.PASSWORD
+    }
+    
+})
+
+
+
+// send verify email
 
 
 

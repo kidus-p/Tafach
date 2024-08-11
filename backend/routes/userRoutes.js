@@ -1,6 +1,6 @@
 const express = require("express");
 const route = express.Router();
-const {signup , login} = require("../controllers/userController")
+const {signup , login , logout} = require("../controllers/userController")
 
 
 // signup
@@ -10,7 +10,7 @@ route.post("/signup" , signup)
 route.post("/login" , login)
 
 //logout
-route.post("/logout")
+route.post("/logout" , logout)
 
 //refresh token
 route.post("/refreshtoken")
