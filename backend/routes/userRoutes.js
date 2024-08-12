@@ -10,16 +10,16 @@ route.post("/signup" , signup)
 route.post("/login" , login)
 
 //logout
-route.post("/logout" , logout)
+// route.post("/logout" , logout)
 
-//refresh token
-route.post("/refreshtoken:token" , refreshtoken )
+// //refresh token
+// route.post("/refreshtoken:token" , refreshtoken )
 
-//verify email
-route.get("/verifyemail:token" , verifyEmail)
+// //verify email
+// route.get("/verifyemail:token" , verifyEmail)
 
-// get user profile
-route.get("/getuser:id" , getuser)
+// // get user profile
+// route.get("/getuser:id" , getuser)
 
 
 //forgot password
