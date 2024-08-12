@@ -1,6 +1,6 @@
 const express = require("express");
 const route = express.Router();
-const {signup , login , logout , getuser ,  verifyemail , refreshtoken , } = require("../controllers/userController")
+const {signup , login , logout , getuser ,  verifyEmail , refreshtoken} = require("../controllers/userController")
 
 
 // signup
@@ -16,7 +16,7 @@ route.post("/logout" , logout)
 route.post("/refreshtoken:token" , refreshtoken )
 
 //verify email
-route.get("/verifyemail:token" , verifyemail)
+route.get("/verifyemail:token" , verifyEmail)
 
 // get user profile
 route.get("/getuser:id" , getuser)
