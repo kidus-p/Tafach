@@ -10,8 +10,9 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use('/api/user', require('./routes/userRoutes'));
+
 // Routes
+app.use('/api/user', require('./routes/userRoutes'));
 
 // Connect to MongoDB
 
