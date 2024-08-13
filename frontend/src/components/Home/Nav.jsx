@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom'; // Assuming you're using React Router for navigation
+import { Link } from 'react-router-dom';
+import Logo from '../../assets/logo.png';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,15 +10,17 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full bg-white text-gray-800">
+    <nav className="w-full bg-[#f9f7f2] text-gray-800">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
         <div className="flex-shrink-0">
-          <Link to="/" className="text-2xl font-bold">Gabbata</Link>
+          <Link to="/">
+            <img src={Logo} alt="Gabbata logo" className="h-16 w-auto" />
+          </Link>
         </div>
 
         {/* Navigation Links */}
-        <div className={`hidden md:flex flex-grow justify-center space-x-4 font-bold `}>
+        <div className={`hidden md:flex flex-grow justify-center space-x-4 font-bold`}>
           <Link to="/" className="hover:text-gray-400">Home</Link>
           <Link to="/recipes" className="hover:text-gray-400">Recipes</Link>
           <Link to="/about" className="hover:text-gray-400">About Us</Link>
@@ -28,7 +31,7 @@ const Navbar = () => {
         <div className="hidden md:flex flex-shrink-0">
           <Link
             to="/login"
-            className="bg-white  text-gray-800 py-2 px-7 rounded hover:bg-gray-700 hover:text-white border border-gray-700"
+            className="bg-white text-gray-800 py-2 px-7 rounded hover:bg-green-500 hover:text-white border border-gray-700 hover:border-white"
           >
             Login
           </Link>
@@ -36,7 +39,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center ml-auto">
-          <button onClick={toggleMenu} className="text-white">
+          <button onClick={toggleMenu} className="text-gray-800">
             <svg
               className="w-6 h-6"
               fill="none"
