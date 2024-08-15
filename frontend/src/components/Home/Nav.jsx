@@ -1,12 +1,27 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/logo.png';
+import Modal from './Modal'; // Import the Modal component
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginForm, setIsLoginForm] = useState(true);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const toggleForm = () => {
+    setIsLoginForm(!isLoginForm);
   };
 
   return (
@@ -29,12 +44,12 @@ const Navbar = () => {
 
         {/* Login Button (hidden on mobile) */}
         <div className="hidden md:flex flex-shrink-0">
-          <Link
-            to="/login"
+          <button
+            onClick={openModal}
             className="bg-white text-gray-800 py-2 px-7 rounded hover:bg-green-500 hover:text-white border border-gray-700 hover:border-white"
           >
             Login
-          </Link>
+          </button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -65,14 +80,53 @@ const Navbar = () => {
           <Link to="/recipes" className="py-2 px-4 text-center block text-white hover:bg-gray-700">Recipes</Link>
           <Link to="/about" className="py-2 px-4 text-center block text-white hover:bg-gray-700">About Us</Link>
           <Link to="/contact" className="py-2 px-4 text-center block text-white hover:bg-gray-700">Contact</Link>
-          <Link
-            to="/login"
+          <button
+            onClick={openModal}
             className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
           >
             Login
-          </Link>
+          </button>
         </div>
       </div>
+
+      {/* Modal for Login/Register */}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <h2 className="text-2xl font-bold mb-4">{isLoginForm ? 'Login' : 'Register'}</h2>
+        <form>
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full p-2 mb-4 border rounded"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full p-2 mb-4 border rounded"
+          />
+          {isLoginForm ? (
+            <button className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+              Login
+            </button>
+          ) : (
+            <>
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                className="w-full p-2 mb-4 border rounded"
+              />
+              <button className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                Register
+              </button>
+            </>
+          )}
+        </form>
+        <button
+          onClick={toggleForm}
+          className="mt-4 text-blue-500 hover:text-blue-700 underline"
+        >
+          {isLoginForm ? 'Don’t have an account? Register here' : 'Already have an account? Login here'}
+        </button>
+      </Modal>
     </nav>
   );
 };
