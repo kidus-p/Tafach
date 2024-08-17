@@ -90,43 +90,40 @@ const Navbar = () => {
       </div>
 
       {/* Modal for Login/Register */}
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <h2 className="text-2xl font-bold mb-4">{isLoginForm ? 'Login' : 'Register'}</h2>
-        <form>
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full p-2 mb-4 border rounded"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-2 mb-4 border rounded"
-          />
-          {isLoginForm ? (
-            <button className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
-              Login
-            </button>
-          ) : (
-            <>
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                className="w-full p-2 mb-4 border rounded"
-              />
-              <button className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                Register
-              </button>
-            </>
-          )}
-        </form>
-        <button
-          onClick={toggleForm}
-          className="mt-4 text-blue-500 hover:text-blue-700 underline"
-        >
-          {isLoginForm ? 'Don’t have an account? Register here' : 'Already have an account? Login here'}
-        </button>
-      </Modal>
+<Modal isOpen={isModalOpen} onClose={closeModal}>
+  <h2 className="text-3xl font-extrabold text-gray-800 mb-6">
+    {isLoginForm ? 'Login' : 'Register'}
+  </h2>
+  <form className="space-y-4">
+    <input
+      type="email"
+      placeholder="Email"
+      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+    />
+    <input
+      type="password"
+      placeholder="Password"
+      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+    />
+    {!isLoginForm && (
+      <input
+        type="password"
+        placeholder="Confirm Password"
+        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    )}
+    <button className={`w-full py-3 rounded-lg font-bold transition-all duration-300 ${isLoginForm ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white`}>
+      {isLoginForm ? 'Login' : 'Register'}
+    </button>
+  </form>
+  <button
+    onClick={toggleForm}
+    className="mt-6 text-blue-500 hover:text-blue-700 underline transition-colors duration-200"
+  >
+    {isLoginForm ? 'Don’t have an account? Register here' : 'Already have an account? Login here'}
+  </button>
+</Modal>
+
     </nav>
   );
 };
