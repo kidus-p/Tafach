@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/logo.png';
 import Modal from './Modal'; // Import the Modal component
+import Drawer from './Drawer'; // Import the Drawer component
+import Popout from '../Home/popout';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,15 +17,16 @@ const Navbar = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [user, setUser] = useState(null); // To store user profile data
+  const [user, setUser] = useState(null); 
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-
-        const token = JSON.parse(localStorage.getItem('user'))?.accessToken;
+        const userData = JSON.parse(localStorage.getItem('user'));
+        const token = userData?.accessToken;
+  
         if (token) {
-          const id = JSON.parse(localStorage.getItem('user'))?.result._id;
+          const id = userData?.result._id;
           const response = await axios.get(`http://localhost:7070/api/user/getuser/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
@@ -32,15 +35,18 @@ const Navbar = () => {
         }
       } catch (error) {
         console.error('Error fetching user profile:', error);
+        setIsAuthenticated(false)
       }
     };
-
-    fetchUserProfile();
-  }, [isAuthenticated]);
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser && storedUser.accessToken) {
+      fetchUserProfile();
+    }
+  }, []);
+  
 
   const handleSignup = async (event) => {
     event.preventDefault();
-
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
       return;
@@ -63,8 +69,8 @@ const Navbar = () => {
       const res = await axios.post('http://localhost:7070/api/user/login', {
         email,
         password,
-      });
 
+      });
       if (res.data.accessToken) {
         setIsAuthenticated(true);
         localStorage.setItem('user', JSON.stringify(res.data));
@@ -90,7 +96,7 @@ const Navbar = () => {
 
   const toggleForm = () => {
     setIsLoginForm(!isLoginForm);
-    setMessage(''); // Clear message when toggling form
+    setMessage('');
   };
 
   const toggleDrawer = () => {
@@ -99,8 +105,11 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem('user'))?.refreshToken;
-      await axios.post('http://localhost:7070/api/user/logout', { token });
+      const token = JSON.parse(localStorage.getItem('user'))?.accessToken;
+      await axios.post('http://localhost:7070/api/user/logout',{token},{
+        headers: { Authorization: `Bearer ${token}`}
+      }
+    );
       localStorage.removeItem('user');
       setIsAuthenticated(false);
       setUser(null);
@@ -195,91 +204,34 @@ const Navbar = () => {
 
       {/* Modal for Login/Register */}
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <h2 className="text-3xl font-extrabold text-gray-800 mb-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">
           {isLoginForm ? 'Login' : 'Register'}
         </h2>
-        <form className="space-y-4" onSubmit={isLoginForm ? handleLogin : handleSignup}>
-          {!isLoginForm && (
-            <input
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          )}
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          {!isLoginForm && (
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          )}
-          <button type="submit" className={`w-full py-3 px-4 text-white rounded-lg ${isLoginForm ? 'bg-blue-500' : 'bg-green-500'} hover:bg-opacity-80`}>
-            {isLoginForm ? 'Login' : 'Register'}
-          </button>
-        </form>
-        {message && <p className="mt-4 text-red-500">{message}</p>}
-        <p className="mt-4 text-center">
-          {isLoginForm ? "Don't have an account? " : "Already have an account? "}
-          <button onClick={toggleForm} className="text-blue-500 hover:underline">
-            {isLoginForm ? 'Register' : 'Login'}
-          </button>
-        </p>
+        <Popout
+          isLoginForm={isLoginForm}
+          handleLogin={handleLogin}
+          handleSignup={handleSignup}
+          name={name}
+          setName={setName}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          confirmPassword={confirmPassword}
+          setConfirmPassword={setConfirmPassword}
+          toggleForm={toggleForm}
+          message={message}
+        />
+        <p className="text-red-500 text-center mt-2">{message}</p>
       </Modal>
 
-      {/* Drawer */}
-      <div className={`z-50 fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out`}>
-        <div className="flex justify-end p-4">
-          <button onClick={toggleDrawer} className="text-gray-800">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
-          </button>
-        </div>
-        <div className="p-4">
-          {user ? (
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Welcome, {user.name}</h2>
-              <button
-                onClick={handleLogout}
-                className="w-full py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <p className="text-center text-gray-600">Please log in to access your profile.</p>
-          )}
-        </div>
-      </div>
+      {/* Drawer for Profile Menu */}
+      <Drawer
+        isDrawerOpen={isDrawerOpen}
+        handleClose={toggleDrawer}
+        user={user}
+        handleLogout={handleLogout}
+      />
     </nav>
   );
 };
