@@ -1,28 +1,25 @@
 const express = require("express");
 const route = express.Router();
-const {signup , login , logout , getUser ,  verifyEmail , refrashToken} = require("../controllers/userController")
-
+const { signup, login, logout, getUser, verifyEmail, refrashToken } = require("../controllers/userController");
+const { authenticateToken } = require("../middleware/authMiddleware");
 
 // signup
-route.post("/signup" , signup)
+route.post("/signup", signup);
 
-//login
-route.post("/login" , login)
+// login
+route.post("/login", login);
 
-//logout
-route.post("/logout" , logout)
+// logout
+route.post("/logout", authenticateToken, logout);
 
-//refresh token
-route.post("/refreshtoken:token" , refrashToken )
+// refresh token
+route.post("/refreshtoken", authenticateToken, refrashToken);
 
-//verify email
-route.get("/verifyemail:token" , verifyEmail)
+// verify email
+route.get("/verifyemail/:token", verifyEmail);
 
 // get user profile
-route.get("/getuser:id" , getUser)
-
-
-//forgot password
-// route.post("/forgotpassword")
+route.get("/getuser/:id", authenticateToken, getUser);
 
 module.exports = route;
+

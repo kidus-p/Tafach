@@ -4,6 +4,10 @@ const Token = require("../modules/token.model");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+require('dotenv').config();
+
+
+
 
 
 // generate token
@@ -14,7 +18,7 @@ const generateToken = (userId) => {
 
 //generate refrash token
 const generateRefrashToken = async (userId) => {
-    const token = jwt.sign({userId}, process.env.REFRASH_SECRET_KEY, {expiresIn: '7d'});
+    const token = jwt.sign({userId}, process.env.REFRESH_SECRET_KEY, {expiresIn: '7d'});
     await Token.create({userId, token});
     return token
 }
@@ -69,7 +73,7 @@ exports.signup = async(req, res) => {
         const user = await User.create({name, email,password:hashedPassword});
         const emailVerifyToken = generateEmailToken(user._id);
         await sendVerifyEmail(user, emailVerifyToken);
-        res.status(201).json({user: user._id});
+        res.status(201).json({user: user._id , emailVerifyToken});
     }
     catch(err){
        res.status(500).json({message: err.message});
@@ -121,8 +125,8 @@ exports.login = async(req, res) => {
         return res.status(401).json({message: "Incorrect password"});
       }
       if(user && isPasswordCorrect){
-        const accessToken = generateToken(user._id);
-        const refreshToken = await generateRefrashToken(user._id);
+        const accessToken =await generateToken(user._id);
+        const refreshToken =await  generateRefrashToken(user._id);
         res.status(200).json({result: user ,accessToken: accessToken,refreshToken : refreshToken});
       }
     }
