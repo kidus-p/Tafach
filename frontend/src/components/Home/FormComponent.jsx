@@ -1,4 +1,4 @@
-
+import { useCallback } from 'react';
 
 const FormComponent = ({
   isLoginForm,
@@ -14,6 +14,11 @@ const FormComponent = ({
   toggleForm,
   message,
 }) => {
+  const handleNameChange = useCallback((e) => setName(e.target.value), [setName]);
+  const handleEmailChange = useCallback((e) => setEmail(e.target.value), [setEmail]);
+  const handlePasswordChange = useCallback((e) => setPassword(e.target.value), [setPassword]);
+  const handleConfirmPasswordChange = useCallback((e) => setConfirmPassword(e.target.value), [setConfirmPassword]);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {!isLoginForm && (
@@ -22,7 +27,7 @@ const FormComponent = ({
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={handleNameChange}
             className="w-full px-4 py-2 border rounded"
             required
           />
@@ -33,7 +38,7 @@ const FormComponent = ({
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
           className="w-full px-4 py-2 border rounded"
           required
         />
@@ -43,7 +48,7 @@ const FormComponent = ({
         <input
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
           className="w-full px-4 py-2 border rounded"
           required
         />
@@ -54,7 +59,7 @@ const FormComponent = ({
           <input
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={handleConfirmPasswordChange}
             className="w-full px-4 py-2 border rounded"
             required
           />

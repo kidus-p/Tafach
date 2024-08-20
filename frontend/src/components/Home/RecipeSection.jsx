@@ -1,155 +1,104 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IoIosSearch } from "react-icons/io";
 import Card from "./Card";
+import axios from 'axios';
+
+const colorPalette = [
+  { backgroundColor: '#FFDAB9', textColor: '#FF4500', borderColor: '#FF4500' }, // PeachPuff with Orange
+  { backgroundColor: '#E6E6FA', textColor: '#6A5ACD', borderColor: '#6A5ACD' }, // Lavender with SlateBlue
+  { backgroundColor: '#E0FFFF', textColor: '#20B2AA', borderColor: '#20B2AA' }, // LightCyan with LightSeaGreen
+  { backgroundColor: '#FFB6C1', textColor: '#FF1493', borderColor: '#FF1493' }, // LightPink with DeepPink
+  { backgroundColor: '#FFFACD', textColor: '#FF6347', borderColor: '#FF6347' }, // LemonChiffon with Tomato
+  { backgroundColor: '#F5DEB3', textColor: '#8B4513', borderColor: '#8B4513' }, // Wheat with SaddleBrown
+  { backgroundColor: '#FF69B4', textColor: '#4B0082', borderColor: '#4B0082' }, // HotPink with Indigo
+  { backgroundColor: '#F0E68C', textColor: '#556B2F', borderColor: '#556B2F' }, // Khaki with DarkOliveGreen
+  { backgroundColor: '#F08080', textColor: '#8B0000', borderColor: '#8B0000' }, // LightCoral with DarkRed
+  { backgroundColor: '#98FB98', textColor: '#228B22', borderColor: '#228B22' }, // PaleGreen with ForestGreen
+  { backgroundColor: '#B0E0E6', textColor: '#4682B4', borderColor: '#4682B4' }, // PowderBlue with SteelBlue
+  { backgroundColor: '#FAFAD2', textColor: '#FFD700', borderColor: '#FFD700' }, // LightGoldenrodYellow with Gold
+  { backgroundColor: '#FFE4B5', textColor: '#F4A460', borderColor: '#F4A460' }, // Moccasin with SandyBrown
+  { backgroundColor: '#F5F5DC', textColor: '#DAA520', borderColor: '#DAA520' }, // Beige with GoldenRod
+  { backgroundColor: '#E0FFFF', textColor: '#2E8B57', borderColor: '#2E8B57' }, // LightCyan with SeaGreen
+  { backgroundColor: '#F5F5F5', textColor: '#FF4500', borderColor: '#FF4500' }, // WhiteSmoke with OrangeRed
+  { backgroundColor: '#D3D3D3', textColor: '#A9A9A9', borderColor: '#A9A9A9' }, // LightGray with DarkGray
+  { backgroundColor: '#FF00FF', textColor: '#8A2BE2', borderColor: '#8A2BE2' }, // Fuchsia with BlueViolet
+  { backgroundColor: '#F0F8FF', textColor: '#4682B4', borderColor: '#4682B4' }, // AliceBlue with SteelBlue
+  { backgroundColor: '#DCDCDC', textColor: '#696969', borderColor: '#696969' }, // Gainsboro with DimGray
+  { backgroundColor: '#B22222', textColor: '#FFFAFA', borderColor: '#FFFAFA' }, // FireBrick with Snow
+  { backgroundColor: '#FF6347', textColor: '#2E8B57', borderColor: '#2E8B57' }, // Tomato with SeaGreen
+  { backgroundColor: '#7FFFD4', textColor: '#4682B4', borderColor: '#4682B4' }, // Aquamarine with SteelBlue
+  { backgroundColor: '#FF1493', textColor: '#FF4500', borderColor: '#FF4500' }, // DeepPink with OrangeRed
+  { backgroundColor: '#F0FFF0', textColor: '#228B22', borderColor: '#228B22' }, // HoneyDew with ForestGreen
+  { backgroundColor: '#FF4500', textColor: '#FFFFFF', borderColor: '#FFFFFF' }, // OrangeRed with White
+  { backgroundColor: '#D8BFD8', textColor: '#4B0082', borderColor: '#4B0082' }, // Thistle with Indigo
+  { backgroundColor: '#FFEFD5', textColor: '#FF8C00', borderColor: '#FF8C00' }, // PapayaWhip with DarkOrange
+  { backgroundColor: '#F5F5F5', textColor: '#808080', borderColor: '#808080' }, // WhiteSmoke with Gray
+  { backgroundColor: '#B0C4DE', textColor: '#2F4F4F', borderColor: '#2F4F4F' }, // LightSteelBlue with DarkSlateGray
+  { backgroundColor: '#D3D3D3', textColor: '#696969', borderColor: '#696969' }  // LightGray with DimGray
+];
+
 
 function CategoryItem({ name, href, backgroundColor, color }) {
   return (
     <a
       href={href}
       className="flex items-center justify-center px-4 py-2 rounded-full text-base font-medium"
-      style={{ backgroundColor, color , border: `1px solid ${color}` }}
+      style={{ backgroundColor, color, border: `1px solid ${color}` }}
     >
       {name}
     </a>
   );
 }
 
-function CategoryList() {
-    return (
-      <div className="flex flex-wrap items-center justify-center gap-8 mt-8">
-        <CategoryItem name='Breakfast' href='/category/breakfast' backgroundColor='#FFDAB9' color='#FF4500' />
-        <CategoryItem name='Lunch' href='/category/lunch' backgroundColor='#E6E6FA' color='#6A5ACD' />
-        <CategoryItem name='Dinner' href='/category/dinner' backgroundColor='#E0FFFF' color='#20B2AA' />
-        <CategoryItem name='Dessert' href='/category/dessert' backgroundColor='#FFB6C1' color='#FF1493' />
-        <CategoryItem name='Snack' href='/category/snack' backgroundColor='#FFFACD' color='#FF6347' />
-        <CategoryItem name='Traditional' href='/category/traditional' backgroundColor='#F5DEB3' color='#8B4513' />
-        <CategoryItem name='Modern' href='/category/modern' backgroundColor='#FF69B4' color='#4B0082' />
-        
-        {/* Ethiopian-Specific Categories */}
-        <CategoryItem name='Ya Tsom (Fast Days)' href='/category/ya-tsom' backgroundColor='#F0E68C' color='#556B2F' />
-        <CategoryItem name='Ya Feseg (Meat Dishes)' href='/category/ya-feseg' backgroundColor='#F08080' color='#8B0000' />
-        
-        {/* Cooking Time Categories */}
-        <CategoryItem name='Under 1 Hour' href='/category/under-1-hour' backgroundColor='#98FB98' color='#228B22' />
-        <CategoryItem name='Over 1 Hour' href='/category/over-1-hour' backgroundColor='#B0E0E6' color='#4682B4' />
-        
-        {/* Difficulty Categories */}
-        <CategoryItem name='Easy' href='/category/easy' backgroundColor='#FAFAD2' color='#FFD700' />
-        <CategoryItem name='Medium' href='/category/medium' backgroundColor='#FFE4B5' color='#F4A460' />
-        <CategoryItem name='Hard' href='/category/hard' backgroundColor='#F5F5DC' color='#DAA520' />
-        
-        {/* Health Categories */}
-        <CategoryItem name='Health' href='/category/health' backgroundColor='#E0FFFF' color='#2E8B57' />
-        <CategoryItem name='High Calories' href='/category/high-calories' backgroundColor='#F5F5F5' color='#FF4500' />
-      </div>
-    );
-  }
-  
-  
-  
+function CategoryList({ categories }) {
+  // Use color palette cyclically based on category index
+  const getCategoryColors = (index) => colorPalette[index % colorPalette.length];
+
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-8 mt-8">
+      {categories.map((category, index) => {
+        const { backgroundColor, textColor, borderColor } = getCategoryColors(index);
+        return (
+          <CategoryItem
+            key={category.name}
+            name={category.name}
+            href={`/category/${category.slug}`}
+            backgroundColor={backgroundColor}
+            color={textColor}
+          />
+        );
+      })}
+    </div>
+  );
+}
 
 const RecipeSection = () => {
   const [showAll, setShowAll] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [recipes, setRecipes] = useState([]);
 
-  const recipes = [
-    {
-      _id: "1",
-      title: "Doro Wat",
-      image: "https://media.istockphoto.com/id/1166890336/photo/doro-wat-on-injera-in-addis-ababa-ethiopia.webp?b=1&s=612x612&w=0&k=20&c=DzTEs8EPAYx4ntag3ATegNzpM9Tl34cHGLGTHNh2mOY=",
-      owner: {
-        name: "Ayele Tesfaye",
-        image: "https://images.unsplash.com/photo-1542385262-cdf06b302c2c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHBlcnNvbnxlbnwwfHwwfHx8MA%3D%3D",
-      },
-      time: 120,
-      difficulty: "Hard",
-      category: "Dinner"
-    },
-    {
-      _id: "2",
-      title: "Injera",
-      image: "https://plus.unsplash.com/premium_photo-1695297516692-82b537c62733?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5qZXJhfGVufDB8fDB8fHww",
-      owner: {
-        name: "Marta Kebede",
-        image: "https://images.unsplash.com/photo-1521566652839-697aa473761a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHBlcnNvbnxlbnwwfHwwfHx8MA%3D%3D",
-      },
-      time: 30,
-      difficulty: "Medium",
-      category: "Lunch"
-    },
-    {
-      _id: "3",
-      title: "Kitfo",
-      image: "https://media.istockphoto.com/id/1460435904/photo/ethiopian-kifto-kitfo-is-a-traditional-dish-present-in-ethiopian-cuisine-it-consists-of-raw.webp?b=1&s=612x612&w=0&k=20&c=NiEhGkUQ2i_8IUdtV87mDr491yBrBtkM--NEnn3QjKs=",
-      owner: {
-        name: "Abebe Woldemariam",
-        image: "https://images.unsplash.com/photo-1518611540400-6b85a0704342?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fHBlcnNvbnxlbnwwfHwwfHx8MA%3D%3D",
-      },
-      time: 45,
-      difficulty: "Easy",
-      category: "Snack"
-    },
-    {
-      _id: "4",
-      title: "Shiro",
-      image: "https://media.istockphoto.com/id/1514287210/photo/ethiopian-combo-platter.webp?b=1&s=612x612&w=0&k=20&c=xwwjqALvdTGAOOq0JLPbD__6FLvX-XyJU5f1rtEGGlc=",
-      owner: {
-        name: "Selam Tesfaye",
-        image: "https://images.unsplash.com/photo-1534458246008-80a1ce3028cd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTB8fHBlcnNvbnxlbnwwfHwwfHx8MA%3D%3D",
-      },
-      time: 90,
-      difficulty: "Medium",
-      category: "Dinner"
-    },
-   
-    {
-        _id: "1",
-        title: "Doro Wat",
-        image: "https://media.istockphoto.com/id/1166890336/photo/doro-wat-on-injera-in-addis-ababa-ethiopia.webp?b=1&s=612x612&w=0&k=20&c=DzTEs8EPAYx4ntag3ATegNzpM9Tl34cHGLGTHNh2mOY=",
-        owner: {
-          name: "Ayele Tesfaye",
-          image: "https://images.unsplash.com/photo-1542385262-cdf06b302c2c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHBlcnNvbnxlbnwwfHwwfHx8MA%3D%3D",
-        },
-        time: 120,
-        difficulty: "Hard",
-        category: "Dinner"
-      },
-      {
-        _id: "2",
-        title: "Injera",
-        image: "https://plus.unsplash.com/premium_photo-1695297516692-82b537c62733?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5qZXJhfGVufDB8fDB8fHww",
-        owner: {
-          name: "Marta Kebede",
-          image: "https://images.unsplash.com/photo-1521566652839-697aa473761a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHBlcnNvbnxlbnwwfHwwfHx8MA%3D%3D",
-        },
-        time: 30,
-        difficulty: "Medium",
-        category: "Lunch"
-      },
-      {
-        _id: "3",
-        title: "Kitfo",
-        image: "https://media.istockphoto.com/id/1460435904/photo/ethiopian-kifto-kitfo-is-a-traditional-dish-present-in-ethiopian-cuisine-it-consists-of-raw.webp?b=1&s=612x612&w=0&k=20&c=NiEhGkUQ2i_8IUdtV87mDr491yBrBtkM--NEnn3QjKs=",
-        owner: {
-          name: "Abebe Woldemariam",
-          image: "https://images.unsplash.com/photo-1518611540400-6b85a0704342?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fHBlcnNvbnxlbnwwfHwwfHx8MA%3D%3D",
-        },
-        time: 45,
-        difficulty: "Easy",
-        category: "Snack"
-      },
-      {
-        _id: "4",
-        title: "Shiro0000",
-        image: "https://media.istockphoto.com/id/1514287210/photo/ethiopian-combo-platter.webp?b=1&s=612x612&w=0&k=20&c=xwwjqALvdTGAOOq0JLPbD__6FLvX-XyJU5f1rtEGGlc=",
-        owner: {
-          name: "Selam Tesfaye",
-          image: "https://images.unsplash.com/photo-1534458246008-80a1ce3028cd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTB8fHBlcnNvbnxlbnwwfHwwfHx8MA%3D%3D",
-        },
-        time: 90,
-        difficulty: "Medium",
-        category: "Dinner"
-      },
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://localhost:7070/api/category/getcategories");
+        setCategories(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    const fetchRecipes = async () => {
+      try {
+        const response = await axios.get("http://localhost:7070/api/recipe/getrecipes");
+        setRecipes(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchCategories();
+    fetchRecipes();
+  }, []);
 
   // Slice the recipes array to display only the first 4 initially
   const displayedRecipes = showAll ? recipes : recipes.slice(0, 4);
@@ -167,7 +116,7 @@ const RecipeSection = () => {
           <IoIosSearch className="w-5 h-5 mr-2 text-neutral-300" />
           <input className="outline-none w-full placeholder:text-gray-600" type="text" placeholder="Search for recipes" />
         </form>
-        <CategoryList /> 
+        <CategoryList categories={categories} /> 
       </div>
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {displayedRecipes.map(recipe => (

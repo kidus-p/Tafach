@@ -1,39 +1,33 @@
-import { useState } from 'react';
-
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../components/Home/useAuth';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 const AddRecipe = () => {
-
-
+  const { user } = useAuth();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [ingredients, setIngredients] = useState([{ name: '', quantity: '', unit: '' }]);
   const [instructions, setInstructions] = useState([{ step: 1, description: '' }]);
   const [cookingTime, setCookingTime] = useState('');
   const [serving, setServing] = useState('');
-  const [image, setImage] = useState('');
   const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [newCategory, setNewCategory] = useState('');
 
-  const recipeCategories = [
-    { name: 'Breakfast', value: 'breakfast' },
-    { name: 'Lunch', value: 'lunch' },
-    { name: 'Dinner', value: 'dinner' },
-    { name: 'Dessert', value: 'dessert' },
-    { name: 'Snack', value: 'snack' },
-    { name: 'Traditional', value: 'traditional' },
-    { name: 'Modern', value: 'modern' },
-    { name: 'Ya Tsom (Fast Days)', value: 'ya-tsom' },
-    { name: 'Ya Feseg (Meat Dishes)', value: 'ya-feseg' },
-    { name: 'Under 1 Hour', value: 'under-1-hour' },
-    { name: 'Over 1 Hour', value: 'over-1-hour' },
-    { name: 'Easy', value: 'easy' },
-    { name: 'Medium', value: 'medium' },
-    { name: 'Hard', value: 'hard' },
-    { name: 'Health', value: 'health' },
-    { name: 'High Calories', value: 'high-calories' }
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:7070/api/category/getcategories');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleIngredientChange = (index, e) => {
     const newIngredients = [...ingredients];
@@ -55,12 +49,6 @@ const AddRecipe = () => {
     newInstructions[index][e.target.name] = e.target.value;
     setInstructions(newInstructions);
   };
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-    }
-  }
 
   const addInstruction = () => {
     setInstructions([...instructions, { step: instructions.length + 1, description: '' }]);
@@ -71,9 +59,68 @@ const AddRecipe = () => {
     setInstructions(newInstructions);
   };
 
+  const handleAddCategory = async () => {
+    if (newCategory.trim() === '') return;
+
+    try {
+      const response = await axios.post('http://localhost:7070/api/category/addcategory', { name: newCategory }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 201) {
+        setCategories([...categories, response.data]);
+        setNewCategory('');
+      } else {
+        console.error(response.data);
+        alert('Failed to add category');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Failed to add category');
+    }
+  };
+
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategories((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    const recipeData = {
+      title,
+      description,
+      cookingTime,
+      serving,
+      ingredients,
+      instructions,
+      categories: selectedCategories,
+      userId: user ? user._id : null
+    };
+
+    try {
+      const response = await axios.post('http://localhost:7070/api/recipe/addrecipe', recipeData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 201) {
+        alert('Recipe added successfully');
+      } else {
+        console.error(response.data);
+        alert('Failed to add recipe');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Failed to add recipe');
+    }
   };
 
   return (
@@ -182,14 +229,13 @@ const AddRecipe = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-medium mb-2">Cooking Time (in minutes)</label>
+          <label className="block text-gray-700 text-sm font-medium mb-2">Cooking Time</label>
           <input
-            type="number"
-            name="cookingTime"
+            type="text"
             value={cookingTime}
             onChange={(e) => setCookingTime(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
-            placeholder="Cooking time"
+            placeholder="Cooking time (e.g., 45 minutes)"
             required
           />
         </div>
@@ -198,60 +244,50 @@ const AddRecipe = () => {
           <label className="block text-gray-700 text-sm font-medium mb-2">Serving Size</label>
           <input
             type="text"
-            name="serving"
             value={serving}
             onChange={(e) => setServing(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
-            placeholder="Serving size"
+            placeholder="Number of servings"
             required
           />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-medium mb-2">Image</label>
-          <input
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
-            required
-          />
-          {image && (
-            <div className="mt-2">
-              <p className="text-gray-700">Selected Image: {image.name}</p>
-            </div>
-          )}
         </div>
 
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-medium mb-2">Categories</label>
-          <div className="flex flex-wrap gap-2">
-            {recipeCategories.map((category) => (
-              <label key={category.value} className="inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  value={category.value}
-                  checked={categories.includes(category.value)}
-                  onChange={(e) => {
-                    const newCategories = e.target.checked
-                      ? [...categories, category.value]
-                      : categories.filter((c) => c !== category.value);
-                    setCategories(newCategories);
-                  }}
-                  className="form-checkbox h-5 w-5 text-green-500 transition-transform duration-200 ease-in-out transform hover:scale-110"
-                />
-                <span className="ml-2 text-gray-700">{category.name}</span>
-              </label>
+          <div className="flex flex-wrap gap-4 mb-4">
+            {categories.map((category) => (
+              <button
+                key={category._id}
+                type="button"
+                onClick={() => handleCategoryClick(category._id)}
+                className={`px-4 py-2 rounded-lg border ${
+                  selectedCategories.includes(category._id)
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-200 text-gray-800'
+                } transition-colors duration-200`}
+              >
+                {category.name}
+              </button>
             ))}
           </div>
+          <input
+            type="text"
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
+            placeholder="Add new category"
+          />
+          <button type="button" onClick={handleAddCategory} className=" mt-3 flex items-center text-green-500 hover:text-green-700 transition-colors duration-200">
+            <FontAwesomeIcon icon={faPlus} className="mr-2" />
+            Add Instruction
+          </button>
         </div>
 
         <button
           type="submit"
-          className="w-full py-3 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-lg hover:bg-green-600 transition-colors duration-200"
+          className="w-full py-3 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition-colors duration-200"
         >
-          Add Recipe
+          Submit Recipe
         </button>
       </form>
     </div>
