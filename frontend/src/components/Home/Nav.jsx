@@ -29,6 +29,29 @@ const Navbar = () => {
 
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
+  const renderAvatar = () => {
+    if (user && user.profileImage) {
+      return (
+        <img
+          src={user.profileImage}
+          alt="Profile"
+          className="w-10 h-10 rounded-full object-cover"
+        />
+      );
+    } else if (user && user.name) {
+      const initials = user.name
+        .split(' ')
+        .map(name => name.charAt(0).toUpperCase())
+        .join('');
+      return (
+        <div className="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">
+          {initials}
+        </div>
+      );
+    }
+    return <div className="w-10 h-10 rounded-full bg-gray-300 text-white flex items-center justify-center font-bold">?</div>;
+  };
+
   return (
     <nav className="w-full bg-[#f9f7f2] text-gray-800">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
@@ -56,9 +79,8 @@ const Navbar = () => {
           {isAuthenticated ? (
             <button
               onClick={toggleDrawer}
-              className="bg-white text-gray-800 py-2 px-7 rounded hover:bg-green-500 hover:text-white font-bold"
             >
-              {user.name}
+              {renderAvatar()}
             </button>
           ) : (
             <button
