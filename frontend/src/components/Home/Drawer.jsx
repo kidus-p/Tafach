@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
+  const [file, setFile] = useState(null);
+
   const handleProfilePictureUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // Handle the file upload logic here
-      console.log('Profile picture uploaded:', file);
-      // Implement the upload logic with an API call to update the profile image
+    setFile(event.target.files[0]);
+  };
+
+  const uploadProfilePicture = async () => {
+    const formData = new FormData();
+    formData.append('profileImage', file);
+
+    try {
+      const response = await axios.post('/api/uploadprofilepicture', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
+      alert('Profile picture updated successfully');
+      // Optionally, refresh the user data to reflect the new profile picture
+    } catch (error) {
+      console.error('Error uploading profile picture:', error);
     }
   };
 
@@ -17,13 +33,14 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
 
   return (
     <div
-      className={`fixed z-30 top-0 right-0 w-80 h-full bg-white shadow-lg transition-transform duration-300 ${
+      className={`fixed z-20 top-0 right-0 w-64 h-full bg-white shadow-lg transition-transform duration-300 ${
         isDrawerOpen ? 'transform translate-x-0' : 'transform translate-x-full'
       }`}
     >
       <div className="flex flex-col h-full">
         {/* Header Section */}
-        <div className="flex justify-end items-center p-4 border-b bg-transparent">
+        <div className="flex justify-between items-center p-4 border-b border-gray-200">
+          <h2 className="text-xl font-bold">Profile</h2>
           <button
             onClick={handleClose}
             className="text-gray-600 hover:text-gray-900 focus:outline-none"
@@ -46,9 +63,9 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
         </div>
 
         {/* Profile Section */}
-        <div className="flex flex-col items-center p-6 border-b border-gray-200">
+        <div className="flex flex-col items-center p-4 border-b border-gray-200">
           <div className="relative">
-            <div className="h-24 w-24 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-2xl border-4 border-gray-300 overflow-hidden">
+            <div className="h-24 w-24 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-2xl overflow-hidden">
               {user.profileImage ? (
                 <img
                   src={user.profileImage}
@@ -56,13 +73,13 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <span>{user.name[0].toUpperCase()}</span>
+                user.name[0].toUpperCase()
               )}
             </div>
 
             <label
               htmlFor="profile-upload"
-              className="absolute bottom-0 right-0 h-8 w-8 bg-white rounded-full flex items-center justify-center cursor-pointer border-2 border-gray-300 shadow-md"
+              className="absolute bottom-0 right-0 h-8 w-8 bg-white rounded-full flex items-center justify-center cursor-pointer border border-gray-300"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -86,34 +103,44 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
               />
             </label>
           </div>
-          <p className="text-lg font-semibold mt-3">{user.name}</p>
-          <p className="text-gray-600">{user.email}</p>
+          <p className="text-lg font-medium mt-3">{user.name}</p>
+          <p className="text-gray-500">{user.email}</p>
+          <button
+            onClick={uploadProfilePicture}
+            className="mt-2 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
+          >
+            Upload Profile Picture
+          </button>
         </div>
 
         {/* My Recipes Section */}
-        <div className="flex-1 p-6 border-b border-gray-200 bg-gray-50">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">My Recipes</h3>
-          <ul className="space-y-3">
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-700">My Recipes</h3>
+          <ul className="mt-2 space-y-2">
             {user.recipes && user.recipes.length > 0 ? (
               user.recipes.map((recipe, index) => (
-                <li key={index} className="text-gray-700 bg-gray-100 p-2 rounded-lg shadow-sm">
+                <li key={index} className="text-gray-600">
                   {recipe}
                 </li>
               ))
             ) : (
-              <p className="text-gray-500">No recipes found.</p>
+              <p className="text-gray-500">You have no recipes yet.</p>
             )}
           </ul>
         </div>
 
         {/* Logout Button */}
-        <div className="p-4 border-t border-gray-200 bg-gray-100">
-          <button
-            onClick={handleLogoutAndCloseDrawer}
-            className="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 transition duration-200 w-full"
-          >
-            Logout
-          </button>
+        <div className="flex-1 p-4 overflow-y-auto">
+          {user ? (
+            <button
+              onClick={handleLogoutAndCloseDrawer}
+              className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200"
+            >
+              Logout
+            </button>
+          ) : (
+            <p className="text-gray-500">Loading user data...</p>
+          )}
         </div>
       </div>
     </div>
