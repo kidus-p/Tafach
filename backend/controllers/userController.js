@@ -157,7 +157,7 @@ exports.getUser = async (req, res) => {
 // update pprofile
 exports.updateProfile = async (req , res) =>{
   try{
-    const id = req.user._id;
+    const {id} = req.params;
     const {bio} = req.body
     const response = await User.findByIdAndUpdate(id , {bio} , {new : true})
     res.status(200).json(response)

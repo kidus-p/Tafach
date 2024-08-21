@@ -14,12 +14,17 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     profileImage: {
-        type: String
+        type: String,
+        default : ""
     },
     isVerified: {
         type: Boolean,
         default: false
     },
+    bio:{
+        type:String,
+        default:""
+    }
 }, {
     timestamps: true
 });
