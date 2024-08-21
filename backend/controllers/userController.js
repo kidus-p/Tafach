@@ -153,6 +153,11 @@ exports.getUser = async (req, res) => {
   res.status(200).json({ user });
 };
 
+
+// update pprofile
+exports.updateProfile = async (req , res) =>{
+  
+}
 // logout
 exports.logout = async (req, res) => {
   const { token } = req.body;

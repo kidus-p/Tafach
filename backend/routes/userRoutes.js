@@ -1,6 +1,6 @@
 const express = require("express");
 const route = express.Router();
-const { signup, login, logout, getUser, verifyEmail, refrashToken } = require("../controllers/userController");
+const { signup, login, logout, getUser, verifyEmail, refrashToken , updateProfile} = require("../controllers/userController");
 const { authenticateToken } = require("../middleware/authMiddleware");
 
 // signup
@@ -21,5 +21,7 @@ route.get("/verifyemail/:token", verifyEmail);
 // get user profile
 route.get("/getuser/:id", authenticateToken, getUser);
 
+//update userprofile (bio , profilepic)
+route.put("/updateprofile" , updateProfile)
 module.exports = route;
 
