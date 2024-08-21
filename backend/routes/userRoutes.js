@@ -22,6 +22,6 @@ route.get("/verifyemail/:token", verifyEmail);
 route.get("/getuser/:id", authenticateToken, getUser);
 
 //update userprofile (bio , profilepic)
-route.put("/updateprofile" , updateProfile)
+route.put("/updateprofile" , authenticateToken , updateProfile)
 module.exports = route;
 

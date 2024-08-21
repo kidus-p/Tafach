@@ -156,7 +156,14 @@ exports.getUser = async (req, res) => {
 
 // update pprofile
 exports.updateProfile = async (req , res) =>{
-  
+  try{
+    const id = req.user._id;
+    const {bio} = req.body
+    const response = await User.findByIdAndUpdate(id , {bio} , {new : true})
+    res.status(200).json(response)
+  }catch(err){
+    res.status(500).json({message : err.message})
+  }
 }
 // logout
 exports.logout = async (req, res) => {
