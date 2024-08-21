@@ -155,16 +155,31 @@ exports.getUser = async (req, res) => {
 
 
 // update pprofile
-exports.updateProfile = async (req , res) =>{
-  try{
-    const {id} = req.params;
-    const {bio} = req.body
-    const response = await User.findByIdAndUpdate(id , {bio} , {new : true})
-    res.status(200).json(response)
-  }catch(err){
-    res.status(500).json({message : err.message})
+exports.updateProfile = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const { bio } = req.body;
+      const updateData = {};
+
+      // Update bio if provided
+      if (bio !== undefined) {
+          updateData.bio = bio;
+      }
+
+      // Update profile picture if a new one is uploaded
+      if (req.file) {
+          updateData.profileImage = `/profilePicture/${req.file.filename}`;
+      }
+
+      // Update the user profile with the provided data
+      const response = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+      res.status(200).json(response);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
   }
-}
+};
+
 // logout
 exports.logout = async (req, res) => {
   const { token } = req.body;
