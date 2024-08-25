@@ -6,24 +6,24 @@ import '../../css/imageFloating.css';
 const Card = ({ recipe }) => {
   return (
     <div className="bg-white shadow-lg hover:shadow-xl transition duration-300 rounded-lg overflow-hidden relative">
-      <img src={recipe.image} alt={recipe.title} className="w-full h-48 object-cover rounded-t-lg" />
+      <img src={recipe.recipeImage} alt={recipe.title} className="w-full h-48 object-cover rounded-t-lg" />
       
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 flex items-center justify-center bg-white border-4 border-white rounded-full shadow-lg z-10">
-        <img src={recipe.owner.image} alt={recipe.owner.name} className="w-full h-full object-cover rounded-full" />
+        <img src={recipe.createdBy.profileImage} alt={recipe.createdBy.name} className="w-full h-full object-cover rounded-full" />
       </div>
 
       <div className="p-5 pt-16">
         <Link to={`/recipe/${recipe._id}`}>
           <h1 className="text-gray-800 font-bold text-xl mb-2 hover:text-gray-600">{recipe.title}</h1>
         </Link>
-        <p className="text-gray-600 mb-4">{recipe.owner.name}</p> {/* Added owner's name */}
+        <p className="text-gray-600 mb-4">{recipe.createdBy.name}</p> {/* Added owner's name */}
         <div className="flex justify-between items-center mb-4">
-          <span className={`py-1 px-3 text-sm font-medium rounded-lg text-white ${getDifficultyClass(recipe.difficulty)}`}>
-            {recipe.difficulty}
+          <span className={`py-1 px-3 text-sm font-medium rounded-lg text-white ${getDifficultyClass('Easy')}`}>
+            {'Esay'}
           </span>
           <div className="flex items-center text-gray-600">
             <PiTimer className="mr-2" />
-            <span>{recipe.time} min</span>
+            <span>{recipe.cookingTime} min</span>
           </div>
         </div>
         <button className="absolute top-4 right-4 bg-white text-gray-600 p-2 rounded-full hover:bg-gray-100 transition duration-300">

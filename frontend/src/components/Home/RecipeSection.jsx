@@ -97,7 +97,7 @@ const RecipeSection = () => {
     }
 
     fetchCategories();
-    // fetchRecipes();
+    fetchRecipes();
   }, []);
 
   // Slice the recipes array to display only the first 4 initially
