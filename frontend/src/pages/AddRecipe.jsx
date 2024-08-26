@@ -15,6 +15,9 @@ const AddRecipe = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [newCategory, setNewCategory] = useState('');
+  const [difficulty, setDifficulty] = useState('Easy');
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -28,6 +31,18 @@ const AddRecipe = () => {
 
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (image) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(image);
+    } else {
+      setImagePreview('');
+    }
+  }, [image]);
 
   const handleIngredientChange = (index, e) => {
     const newIngredients = [...ingredients];
@@ -93,21 +108,28 @@ const AddRecipe = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const recipeData = {
-      title,
-      description,
-      cookingTime,
-      serving,
-      ingredients,
-      instructions,
-      categories: selectedCategories,
-      userId: user ? user._id : null
-    };
+    // Check if required fields are filled out
+    if (!title || !description || !cookingTime || !serving || !selectedCategories.length) {
+      alert('Please fill out all required fields and select at least one category');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('cookingTime', cookingTime);
+    formData.append('serving', serving);
+    formData.append('difficulty', difficulty);
+    formData.append('userId', user ? user._id : null);
+    formData.append('image', image); 
+    formData.append('categories', JSON.stringify(selectedCategories));
+    formData.append('ingredients', JSON.stringify(ingredients));
+    formData.append('instructions', JSON.stringify(instructions));
 
     try {
-      const response = await axios.post('http://localhost:7070/api/recipe/addrecipe', recipeData, {
+      const response = await axios.post('http://localhost:7070/api/recipe/addrecipe', formData, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
       });
 
@@ -200,21 +222,12 @@ const AddRecipe = () => {
           {instructions.map((instruction, index) => (
             <div key={index} className="flex items-center mb-4">
               <input
-                type="number"
-                name="step"
-                value={instruction.step}
-                onChange={(e) => handleInstructionChange(index, e)}
-                placeholder="Step"
-                className="w-1/4 p-3 border border-gray-300 rounded-lg shadow-sm mr-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
-                required
-              />
-              <input
                 type="text"
                 name="description"
                 value={instruction.description}
                 onChange={(e) => handleInstructionChange(index, e)}
-                placeholder="Description"
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
+                placeholder="Instruction"
+                className="w-3/4 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
                 required
               />
               <button type="button" onClick={() => removeInstruction(index)} className="ml-2 p-2 text-red-500 hover:text-red-700 transition-colors duration-200">
@@ -229,65 +242,96 @@ const AddRecipe = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-medium mb-2">Cooking Time</label>
+          <label className="block text-gray-700 text-sm font-medium mb-2">Cooking Time (minutes)</label>
           <input
-            type="text"
+            type="number"
             value={cookingTime}
             onChange={(e) => setCookingTime(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
-            placeholder="Cooking time (e.g., 45 minutes)"
+            placeholder="Cooking time"
             required
           />
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-medium mb-2">Serving Size</label>
+          <label className="block text-gray-700 text-sm font-medium mb-2">Serving</label>
           <input
-            type="text"
+            type="number"
             value={serving}
             onChange={(e) => setServing(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
-            placeholder="Number of servings"
+            placeholder="Serving"
             required
           />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-medium mb-2">Difficulty</label>
+          <select
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
+          >
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
         </div>
 
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-medium mb-2">Categories</label>
-          <div className="flex flex-wrap gap-4 mb-4">
+          <div className="flex flex-wrap mb-4">
             {categories.map((category) => (
               <button
                 key={category._id}
                 type="button"
                 onClick={() => handleCategoryClick(category._id)}
-                className={`px-4 py-2 rounded-lg border ${
+                className={`mr-2 mb-2 p-2 border rounded-lg ${
                   selectedCategories.includes(category._id)
                     ? 'bg-green-500 text-white'
                     : 'bg-gray-200 text-gray-800'
-                } transition-colors duration-200`}
+                }`}
               >
                 {category.name}
               </button>
             ))}
           </div>
+          <div className="flex items-center">
+            <input
+              type="text"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              className="w-3/4 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
+              placeholder="New category"
+            />
+            <button
+              type="button"
+              onClick={handleAddCategory}
+              className="ml-2 p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-medium mb-2">Recipe Image</label>
           <input
-            type="text"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-transform duration-200 ease-in-out transform hover:scale-105"
-            placeholder="Add new category"
           />
-          <button type="button" onClick={handleAddCategory} className=" mt-3 flex items-center text-green-500 hover:text-green-700 transition-colors duration-200">
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Add Instruction
-          </button>
+          {imagePreview && (
+            <img src={imagePreview} alt="Image preview" className="mt-4 w-full h-64 object-cover rounded-lg" />
+          )}
         </div>
 
         <button
           type="submit"
-          className="w-full py-3 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition-colors duration-200"
+          className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200"
         >
-          Submit Recipe
+          Add Recipe
         </button>
       </form>
     </div>

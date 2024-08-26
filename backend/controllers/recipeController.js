@@ -40,9 +40,25 @@ exports.addRecipe = async (req, res) => {
 
 
 // get all recipes
+
 exports.getAllRecipes = async (req, res) => {
-    
-}
+  try {
+    // Fetch all recipes from the database
+    const recipes = await Recipe.find()
+      .populate('createdBy', 'name email profileImage')
+      .populate('categories', 'name');
+
+    // If no recipes are found
+    if (!recipes.length) {
+      return res.status(404).json({ message: "No recipes found" });
+    }
+
+    res.status(200).json(recipes);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving recipes", error: error.message });
+  }
+};
+
 
 
 

@@ -51,11 +51,14 @@ const recipeSchema = new mongoose.Schema({
   recipeImage : {
     type:String,
     default:""
-  }
+  }, 
+  difficulty: {
+    type: String,
+    enum: ['Easy', 'Medium', 'Hard'], 
+    default: 'Medium'
+  },
 });
 
-// const Recipe = mongoose.model('Recipe', recipeSchema);
-// module.exports = Recipe;
 
 
 module.exports = mongoose.model('Recipe', recipeSchema);

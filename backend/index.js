@@ -1,32 +1,28 @@
+// server.js
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const cors = require("cors");
 
-// Variables
-const PORT = process.env.PORT 
+const PORT = process.env.PORT || 5000;
 const MongoDB = process.env.MONGO_COM_URL;
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 
-// Routes
 app.use("/api/user", require("./routes/userRoutes"));
 app.use("/api/recipe", require("./routes/recipeRoutes"));
 app.use("/api/category", require("./routes/categoryRoutes"));
+app.use('/recipePictures', express.static('./recipePictures'));
+app.use('/profilePicture', express.static('./profilePicture'));
 
 
-
-// Connect to MongoDB
 mongoose
   .connect(MongoDB, {})
   .then(() => {
     app.listen(PORT, () => {
-      console.log(
-        `Connected to MongoDB and Server is running on port ${PORT} ...`
-      );
+      console.log(`Connected to MongoDB and Server is running on port ${PORT} ...`);
     });
   })
   .catch((error) => {

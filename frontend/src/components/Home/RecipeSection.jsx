@@ -51,7 +51,6 @@ function CategoryItem({ name, href, backgroundColor, color }) {
 }
 
 function CategoryList({ categories }) {
-  // Use color palette cyclically based on category index
   const getCategoryColors = (index) => colorPalette[index % colorPalette.length];
 
   return (
@@ -62,7 +61,7 @@ function CategoryList({ categories }) {
           <CategoryItem
             key={category.name}
             name={category.name}
-            href={`/category/${category.slug}`}
+            // href={`/category/${category.slug}`}
             backgroundColor={backgroundColor}
             color={textColor}
           />
@@ -88,8 +87,10 @@ const RecipeSection = () => {
     }
 
     const fetchRecipes = async () => {
+      
       try {
-        const response = await axios.get("http://localhost:7070/api/recipe/getrecipes");
+        
+        const response = await axios.get("http://localhost:7070/api/recipe/getallrecipes");
         setRecipes(response.data);
       } catch (error) {
         console.error(error);

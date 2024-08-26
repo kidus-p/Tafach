@@ -29,29 +29,6 @@ const Navbar = () => {
 
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
-  const renderAvatar = () => {
-    if (user && user.profileImage) {
-      return (
-        <img
-          src={user.profileImage}
-          alt="Profile"
-          className="w-10 h-10 rounded-full object-cover"
-        />
-      );
-    } else if (user && user.name) {
-      const initials = user.name
-        .split(' ')
-        .map(name => name.charAt(0).toUpperCase())
-        .join('');
-      return (
-        <div className="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">
-          {initials}
-        </div>
-      );
-    }
-    return <div className="w-10 h-10 rounded-full bg-gray-300 text-white flex items-center justify-center font-bold">?</div>;
-  };
-
   return (
     <nav className="w-full bg-[#f9f7f2] text-gray-800">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
@@ -75,12 +52,48 @@ const Navbar = () => {
           </Link>
         </div>
 
+        <div className="md:hidden flex-shrink-0">
+          <button
+            onClick={toggleDrawer}
+            className="flex items-center justify-center text-gray-800 hover:text-gray-600"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
         <div className="hidden md:flex flex-shrink-0">
           {isAuthenticated ? (
             <button
               onClick={toggleDrawer}
+              className="flex items-center justify-center text-gray-800 hover:text-gray-600"
             >
-              {renderAvatar()}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
             </button>
           ) : (
             <button
@@ -91,16 +104,16 @@ const Navbar = () => {
             </button>
           )}
         </div>
-
-        {isDrawerOpen && (
-          <Drawer
-            isDrawerOpen={isDrawerOpen}
-            handleClose={toggleDrawer}
-            user={user}
-            handleLogout={handleLogout}
-          />
-        )}
       </div>
+
+      {isDrawerOpen && (
+        <Drawer
+          isDrawerOpen={isDrawerOpen}
+          handleClose={toggleDrawer}
+          user={user}
+          handleLogout={handleLogout}
+        />
+      )}
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <h2 className="text-2xl font-bold mb-4 text-center">

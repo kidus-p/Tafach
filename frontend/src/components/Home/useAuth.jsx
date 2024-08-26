@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
-
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -24,7 +23,7 @@ export const AuthProvider = ({ children }) => {
         if (token) {
           const id = userData?.result._id;
           const response = await axios.get(
-            `http://localhost:7070/api/user/getuser/${id}`,
+            `${import.meta.env.VITE_BACKEND_URL}/api/user/getuser/${id}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -52,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:7070/api/user/signup",
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/signup`,
         { name, email, password }
       );
       setMessage(response.data.message);
@@ -66,14 +65,14 @@ export const AuthProvider = ({ children }) => {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post("http://localhost:7070/api/user/login", {
-        email,
-        password,
-      });
-      if (res.data.accessToken) {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/login`,
+        { email, password }
+      );
+      if (response.data.accessToken) {
         setIsAuthenticated(true);
-        localStorage.setItem("user", JSON.stringify(res.data));
-        setUser(res.data.result);
+        localStorage.setItem("user", JSON.stringify(response.data));
+        setUser(response.data.result);
         setMessage("Login successful!");
       }
     } catch (error) {
@@ -87,7 +86,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = JSON.parse(localStorage.getItem("user"))?.accessToken;
       await axios.post(
-        "http://localhost:7070/api/user/logout",
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/logout`,
         { token },
         {
           headers: { Authorization: `Bearer ${token}` },

@@ -1,18 +1,74 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
-  const handleProfilePictureUpload = (event) => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:7070";
+  
+  // Retrieve access token from localStorage
+  const token = JSON.parse(localStorage.getItem('user'))?.accessToken;
+
+  // State for profile picture
+  const [profilePicture, setProfilePicture] = useState(user.profileImage || '');
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (user && user._id) {
+        try {
+          const response = await axios.get(
+            `${backendUrl}/api/user/getuser/${user._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.data.user && response.data.user.profileImage) {
+            const updatedProfileImage = `${backendUrl}${response.data.user.profileImage}?${new Date().getTime()}`;
+            setProfilePicture(updatedProfileImage);
+          }
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+        }
+      }
+    };
+
+    if (isDrawerOpen) {
+      fetchUserProfile();
+    }
+  }, [isDrawerOpen, user, backendUrl, token]);
+
+  const handleProfilePictureUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      
-      console.log('Profile picture uploaded:', file);
-     
+      const formData = new FormData();
+      formData.append('profilePicture', file);
+    
+      try {
+        const response = await axios.put(
+          `${backendUrl}/api/user/updateprofile/${user._id}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+    
+        if (response.status === 200 && response.data && response.data.profileImage) {
+          const updatedProfileImage = `${backendUrl}${response.data.profileImage}?${new Date().getTime()}`;
+          setProfilePicture(updatedProfileImage);
+        }
+      } catch (error) {
+        console.error('Error uploading profile picture:', error.response?.data || error.message);
+      }
     }
   };
 
   const handleLogoutAndCloseDrawer = () => {
     handleLogout();
-    handleClose(); 
+    handleClose();
   };
 
   return (
@@ -24,7 +80,6 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
       <div className="flex flex-col h-full">
         {/* Header Section */}
         <div className="flex justify-end items-center p-4 border-b border-gray-200 bg-gray-100">
-  
           <button
             onClick={handleClose}
             className="text-gray-600 hover:text-gray-900 focus:outline-none"
@@ -50,9 +105,9 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
         <div className="flex flex-col items-center p-6 border-b border-gray-200">
           <div className="relative">
             <div className="h-24 w-24 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-2xl border-4 border-gray-300 overflow-hidden">
-              {user.profileImage ? (
+              {profilePicture ? (
                 <img
-                  src={user.profileImage}
+                  src={profilePicture}
                   alt="User Profile"
                   className="h-full w-full object-cover"
                 />
