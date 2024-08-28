@@ -1,11 +1,17 @@
 import Header from "../components/Home/Header"
 import RecipeSection from "../components/Home/RecipeSection"
+import About from "../components/Home/About"
+import Team  from "../components/Home/Team"
+import Footer from "../components/Home/footer"
 
 const Home = () => {
   return (
     <main className=" w-full flex flex-col bg-[#f9f7f2]">
       <Header />
       <RecipeSection />
+      <About />
+      <Team />
+      <Footer />
     </main>
   )
 }
