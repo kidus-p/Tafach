@@ -1,7 +1,7 @@
 const express = require("express");
 const route = express.Router();
 const { signup, login, logout, getUser, verifyEmail, refrashToken, updateProfile } = require("../controllers/userController");
-const { authenticateToken } = require("../middleware/authMiddleware");
+// const { authenticateToken } = require("../middleware/authMiddleware");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
@@ -44,18 +44,18 @@ route.post("/signup", signup);
 route.post("/login", login);
 
 // Logout
-route.post("/logout", authenticateToken, logout);
+route.post("/logout", logout);
 
 // Refresh token
-route.post("/refreshtoken", authenticateToken, refrashToken);
+route.post("/refreshtoken", refrashToken);
 
 // Verify email
 route.get("/verifyemail/:token", verifyEmail);
 
 // Get user profile
-route.get("/getuser/:id", authenticateToken, getUser);
+route.get("/getuser/:id", getUser);
 
 // Update user profile (bio, profile pic)
-route.put("/updateprofile/:id", authenticateToken, upload.single('profilePicture'), updateProfile);
+route.put("/updateprofile/:id", upload.single('profilePicture'), updateProfile);
 
 module.exports = route;

@@ -14,7 +14,7 @@ app.use(cors());
 app.use("/api/user", require("./routes/userRoutes"));
 app.use("/api/recipe", require("./routes/recipeRoutes"));
 app.use("/api/category", require("./routes/categoryRoutes"));
-app.use('/recipePictures', express.static('./recipePictures'));
+app.use('/recipeImage', express.static('./recipeImage'));
 app.use('/profilePicture', express.static('./profilePicture'));
 
 

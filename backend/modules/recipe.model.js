@@ -20,7 +20,7 @@ const recipeSchema = new mongoose.Schema({
     
       {
         name: { type: String, required: true },
-        quantity: { type: Number, required: true },
+        quantity: { type: String, required: true },
         unit: { type: String, required: true },
       },
     
@@ -52,11 +52,6 @@ const recipeSchema = new mongoose.Schema({
     type:String,
     default:""
   }, 
-  difficulty: {
-    type: String,
-    enum: ['Easy', 'Medium', 'Hard'], 
-    default: 'Medium'
-  },
 });
 
 
