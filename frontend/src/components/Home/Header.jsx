@@ -14,6 +14,12 @@ import {
   bagVid8,
   bagVid9,
   bagVid10,
+  bagVid11,
+  bagVid12,
+  bagVid13,
+  bagVid14,
+  bagVid15,
+  bagVid16,
 } from "../../utilitys/BackgrounVids";
 import { useEffect, useState } from "react";
 
@@ -46,43 +52,72 @@ const Header = () => {
     bagVid8,
     bagVid9,
     bagVid10,
+    bagVid11,
+    bagVid12,
+    bagVid13,
+    bagVid14,
+    bagVid15,
+    bagVid16,
   ];
 
-  // State for managing the current video index in the slider
   const [currentVideo, setCurrentVideo] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
 
-  // Function to change the video automatically every 10 seconds
+  // Function to change the video with smooth sliding effect
+  const changeVideo = (direction) => {
+    setTransitioning(true);
+    setTimeout(() => {
+      setCurrentVideo((prevIndex) => {
+        if (direction === "next") {
+          return (prevIndex + 1) % bagVids.length;
+        } else {
+          return prevIndex === 0 ? bagVids.length - 1 : prevIndex - 1;
+        }
+      });
+      setTransitioning(false);
+    }, 300); 
+  };
+
+
   useEffect(() => {
     const videoInterval = setInterval(() => {
-      setCurrentVideo((prevIndex) => (prevIndex + 1) % bagVids.length);
-    }, 10000); // Change every 10 seconds
+      changeVideo("next");
+    }, 10000); 
+
     return () => clearInterval(videoInterval);
   }, [bagVids.length]);
 
   return (
     <div className="w-full h-[100vh] overflow-hidden relative">
       <Navbar />
-      <div className="relative w-full h-full">
+      <div className="relative w-full h-full overflow-hidden">
         {/* Video Slider */}
-        <video
-          className="w-full h-full object-cover absolute top-0 left-0"
-          autoPlay
-          loop
-          muted
-          src={bagVids[currentVideo]}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent flex flex-col justify-center items-center z-10">
+        <div className="relative w-full h-full">
+          <div
+            className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ease-in-out ${transitioning ? 'opacity-0' : 'opacity-100'}`}
+            style={{ background: `url(${bagVids[currentVideo]}) no-repeat center center/cover` }}
+          >
+            <video
+              className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-1000 ease-in-out ${transitioning ? 'opacity-0' : 'opacity-100'}`}
+              autoPlay
+              loop
+              muted
+              src={bagVids[currentVideo]}
+            />
+          </div>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent flex flex-col justify-center items-center z-10 px-4">
           {/* Headline Section */}
-          <h1 className="text-white text-4xl md:text-5xl font-extrabold text-center px-4 drop-shadow-lg">
+          <h1 className="text-white text-4xl md:text-5xl font-extrabold text-center drop-shadow-lg">
             Gabbata: Your Gateway to Ethiopian Flavors
           </h1>
           <p className="text-white text-lg md:text-xl text-center mt-4 px-4 drop-shadow-md">
             Discover the vibrant world of Ethiopian cuisine with our authentic
             recipes, crafted for both tradition and taste.
           </p>
-          {/* Call to Action Button */}
+
           <button
-            className="bg-transparent my-16 text-white py-3 px-10 rounded border border-white hover:bg-green-500 hover:scale-105 transition-transform font-bold text-lg shadow-lg"
+            className="bg-transparent text-white py-3 px-10 rounded border border-white hover:bg-green-500 hover:scale-105 transition-transform font-bold text-lg shadow-lg mt-8"
             onClick={() =>
               user === null ? openModal() : navigate("/add-recipe")
             }

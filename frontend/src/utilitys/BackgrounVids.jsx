@@ -8,6 +8,12 @@ const bagVid7 = 'src/assets/discusting.mp4';
 const bagVid8 = 'src/assets/egg_mix.mp4';
 const bagVid9 = 'src/assets/egg.mp4';
 const bagVid10 = 'src/assets/fish.mp4';
+const bagVid11 = 'src/assets/oni.mp4';
+const bagVid12 = 'src/assets/rollin_bred.mp4';
+const bagVid13 = 'src/assets/rollin_bred.mp4';
+const bagVid14 = 'src/assets/rolling_meat.mp4';
+const bagVid15 = 'src/assets/vig.mp4';
+const bagVid16 = 'src/assets/vig2.mp4';
 
 export {
   bagVid1,
@@ -19,5 +25,11 @@ export {
   bagVid7,
   bagVid8,
   bagVid9,
-  bagVid10
+  bagVid10,
+  bagVid11,
+  bagVid12,
+  bagVid13,
+  bagVid14,
+  bagVid15,
+  bagVid16
 };
