@@ -15,6 +15,7 @@ import {
   bagVid9,
   bagVid10,
 } from "../../utilitys/BackgrounVids";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const {
@@ -47,31 +48,55 @@ const Header = () => {
     bagVid10,
   ];
 
+  // State for managing the current video index in the slider
+  const [currentVideo, setCurrentVideo] = useState(0);
+
+  // Function to change the video automatically every 10 seconds
+  useEffect(() => {
+    const videoInterval = setInterval(() => {
+      setCurrentVideo((prevIndex) => (prevIndex + 1) % bagVids.length);
+    }, 10000); // Change every 10 seconds
+    return () => clearInterval(videoInterval);
+  }, [bagVids.length]);
+
   return (
     <div className="w-full h-[100vh] overflow-hidden relative">
       <Navbar />
       <div className="relative w-full h-full">
+        {/* Video Slider */}
         <video
           className="w-full h-full object-cover absolute top-0 left-0"
           autoPlay
           loop
           muted
-          src={bagVids[Math.floor(Math.random() * bagVids.length)]}
+          src={bagVids[currentVideo]}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent flex flex-col justify-center items-center z-10">
-          <h1 className="text-white text-2xl font-bold md:text-3xl text-center px-4">
-            Gabbata: Your Gateway to Ethiopian Flavors - Ya Enat Guada
+          {/* Headline Section */}
+          <h1 className="text-white text-4xl md:text-5xl font-extrabold text-center px-4 drop-shadow-lg">
+            Gabbata: Your Gateway to Ethiopian Flavors
           </h1>
+          <p className="text-white text-lg md:text-xl text-center mt-4 px-4 drop-shadow-md">
+            Discover the vibrant world of Ethiopian cuisine with our authentic
+            recipes, crafted for both tradition and taste.
+          </p>
+          {/* Call to Action Button */}
           <button
-            className="bg-transparent my-16 text-white py-2 px-7 rounded border border-white hover:bg-green-500 font-bold text-lg"
+            className="bg-transparent my-16 text-white py-3 px-10 rounded border border-white hover:bg-green-500 hover:scale-105 transition-transform font-bold text-lg shadow-lg"
             onClick={() =>
               user === null ? openModal() : navigate("/add-recipe")
             }
           >
-            Your Recipe
+            Share Your Recipe
           </button>
+          {/* Subtitle */}
+          <p className="text-white text-sm md:text-md text-center px-4 mt-4 drop-shadow-md">
+            Dive into the rich cultural heritage of Ethiopia, one dish at a
+            time.
+          </p>
         </div>
       </div>
+      {/* Modal for Login/Register */}
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <h2 className="text-2xl font-bold mb-4 text-center">
           {isLoginForm ? "Login" : "Register"}

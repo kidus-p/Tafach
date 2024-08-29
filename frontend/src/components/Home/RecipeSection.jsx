@@ -38,10 +38,9 @@ const colorPalette = [
 ];
 
 
-function CategoryItem({ name, href, backgroundColor, color }) {
+function CategoryItem({ name, backgroundColor, color }) {
   return (
     <a
-      href={href}
       className="flex items-center justify-center px-4 py-2 rounded-full text-base font-medium"
       style={{ backgroundColor, color, border: `1px solid ${color}` }}
     >
@@ -61,7 +60,6 @@ function CategoryList({ categories }) {
           <CategoryItem
             key={category.name}
             name={category.name}
-            // href={`/category/${category.slug}`}
             backgroundColor={backgroundColor}
             color={textColor}
           />

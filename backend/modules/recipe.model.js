@@ -52,6 +52,12 @@ const recipeSchema = new mongoose.Schema({
     type:String,
     default:""
   }, 
+  reviwe :[
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review', 
+    },
+  ]
 });
 
 

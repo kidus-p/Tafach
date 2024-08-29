@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 const teamData = [
   {
     id: 1,
-    name: 'Alice Johnson',
+    name: 'Tizazab Ayana ',
     position: 'Backend Developer',
     image: 'https://plus.unsplash.com/premium_photo-1689551670902-19b441a6afde?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZSUyMHBpY3xlbnwwfHwwfHx8MA%3D%3D',
     description: 'Alice is a backend developer who excels in designing scalable server-side applications and optimizing database interactions.',
@@ -16,7 +16,7 @@ const teamData = [
   },
   {
     id: 2,
-    name: 'Bob Smith',
+    name: 'KIdus Pertos',
     position: 'Frontend Developer',
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZSUyMHBpY3xlbnwwfHwwfHx8MA%3D%3D',
     description: 'Bob is a frontend developer who specializes in creating intuitive and visually stunning user interfaces that enhance the user experience.',
@@ -28,7 +28,7 @@ const teamData = [
   },
   {
     id: 3,
-    name: 'Carol Davis',
+    name: 'Abel Getenet',
     position: 'Database Manager',
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmlsZSUyMHBpY3xlbnwwfHwwfHx8MA%3D%3D',
     description: 'Carol is a database manager who ensures the integrity, availability, and security of our data through effective database design and management.',
