@@ -6,7 +6,7 @@ const teamData = [
     id: 1,
     name: 'Tizazab Ayana ',
     position: 'Backend Developer',
-    image: 'https://plus.unsplash.com/premium_photo-1689551670902-19b441a6afde?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZSUyMHBpY3xlbnwwfHwwfHx8MA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1702482527875-e16d07f0d91b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3xlbnwwfHwwfHx8MA%3D%3D',
     description: 'Alice is a backend developer who excels in designing scalable server-side applications and optimizing database interactions.',
     social: {
       facebook: 'https://facebook.com',
@@ -18,7 +18,7 @@ const teamData = [
     id: 2,
     name: 'KIdus Pertos',
     position: 'Frontend Developer',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZSUyMHBpY3xlbnwwfHwwfHx8MA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1669475535925-a011d7c31d45?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHByb2ZpbGUlMjBwaWN8ZW58MHx8MHx8fDA%3D',
     description: 'Bob is a frontend developer who specializes in creating intuitive and visually stunning user interfaces that enhance the user experience.',
     social: {
       facebook: 'https://facebook.com',
@@ -30,7 +30,7 @@ const teamData = [
     id: 3,
     name: 'Abel Getenet',
     position: 'Database Manager',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmlsZSUyMHBpY3xlbnwwfHwwfHx8MA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1581391528803-54be77ce23e3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGUlMjBwaWN8ZW58MHx8MHx8fDA%3D',
     description: 'Carol is a database manager who ensures the integrity, availability, and security of our data through effective database design and management.',
     social: {
       facebook: 'https://facebook.com',

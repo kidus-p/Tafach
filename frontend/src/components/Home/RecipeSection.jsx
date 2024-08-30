@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { IoIosSearch } from "react-icons/io";
 import Card from "./Card";
 import axios from 'axios';
+import HighlightedSection from './HighRated';
 
 const colorPalette = [
   { backgroundColor: '#FFDAB9', textColor: '#FF4500', borderColor: '#FF4500' }, // PeachPuff with Orange
@@ -37,31 +38,40 @@ const colorPalette = [
   { backgroundColor: '#D3D3D3', textColor: '#696969', borderColor: '#696969' }  // LightGray with DimGray
 ];
 
-
-function CategoryItem({ name, backgroundColor, color }) {
+function CategoryItem({ name, backgroundColor, color, onClick, isSelected }) {
   return (
     <a
-      className="flex items-center justify-center px-4 py-2 rounded-full text-base font-medium"
-      style={{ backgroundColor, color, border: `1px solid ${color}` }}
+      onClick={onClick}
+      className={`flex items-center justify-center px-6 py-3 rounded-full text-lg font-semibold cursor-pointer transition-transform transform ${
+        isSelected ? 'border-4' : ''
+      }`}
+      style={{
+        backgroundColor,
+        color,
+        border: `1px solid ${color}`,
+        boxShadow: isSelected ? `0 0 12px ${color}` : 'none',
+      }}
     >
       {name}
     </a>
   );
 }
 
-function CategoryList({ categories }) {
+function CategoryList({ categories, onCategorySelect, selectedCategories }) {
   const getCategoryColors = (index) => colorPalette[index % colorPalette.length];
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-8 mt-8">
+    <div className="flex flex-wrap items-center justify-center gap-6 mt-8">
       {categories.map((category, index) => {
-        const { backgroundColor, textColor, borderColor } = getCategoryColors(index);
+        const { backgroundColor, textColor } = getCategoryColors(index);
         return (
           <CategoryItem
-            key={category.name}
+            key={category._id}
             name={category.name}
             backgroundColor={backgroundColor}
             color={textColor}
+            onClick={() => onCategorySelect(category._id)}
+            isSelected={selectedCategories.includes(category._id)}
           />
         );
       })}
@@ -73,61 +83,126 @@ const RecipeSection = () => {
   const [showAll, setShowAll] = useState(false);
   const [categories, setCategories] = useState([]);
   const [recipes, setRecipes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:7070/api/category/getcategories");
-        setCategories(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+        setLoading(true);
+        const [categoriesResponse, recipesResponse] = await Promise.all([
+          axios.get("http://localhost:7070/api/category/getcategories"),
+          axios.get("http://localhost:7070/api/recipe/getallrecipes")
+        ]);
 
-    const fetchRecipes = async () => {
-      
-      try {
-        
-        const response = await axios.get("http://localhost:7070/api/recipe/getallrecipes");
-        setRecipes(response.data);
+        setCategories(categoriesResponse.data);
+        setRecipes(recipesResponse.data);
+        setFilteredRecipes(recipesResponse.data);
       } catch (error) {
+        setError("Failed to load data.");
         console.error(error);
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
-    fetchCategories();
-    fetchRecipes();
+    fetchData();
   }, []);
 
-  // Slice the recipes array to display only the first 4 initially
-  const displayedRecipes = showAll ? recipes : recipes.slice(0, 4);
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+    filterRecipes(value, selectedCategories);
+  };
+
+  const filterRecipes = (search, categories) => {
+    let filtered = [...recipes];
+
+    if (search) {
+      filtered = filtered.filter((recipe) => {
+        const matchesSearch = recipe?.title?.toLowerCase().includes(search.toLowerCase());
+        return matchesSearch;
+      });
+    }
+
+    if (categories.length > 0) {
+      filtered = filtered.filter((recipe) => {
+        const recipeCategoryIds = recipe?.categories?.map((category) => category?._id);
+
+        const matchesCategory = categories.every((categoryId) =>
+          recipeCategoryIds.includes(categoryId.toString())
+        );
+
+        return matchesCategory;
+      });
+    }
+    setFilteredRecipes(filtered);
+  };
+
+  const handleCategorySelect = (categoryId) => {
+    const updatedCategories = selectedCategories.includes(categoryId)
+      ? selectedCategories.filter((id) => id !== categoryId)
+      : [...selectedCategories, categoryId];
+
+    setSelectedCategories(updatedCategories);
+    filterRecipes(searchTerm, updatedCategories);
+  };
+
+  const displayedRecipes = showAll ? filteredRecipes : filteredRecipes.slice(0, 4);
 
   return (
-    <div className="flex flex-col items-center min-h-screen px-5 xl:px-10">
-      <div className="w-full md:w-3/4 lg:w-2/3 mb-10">
-        <h1 className="mt-6 mb-10 text-4xl xl:text-5xl text-center font-bold leading-normal xl:leading-relaxed text-gray-700">
-          Discover the Heart of <span className="text-green-500">Ethiopia</span> on Your Plate
+    <div className="flex flex-col items-center min-h-screen px-6 xl:px-12 bg-gray-50">
+      <div className="w-full md:w-4/5 lg:w-3/4 mb-12">
+        <h1 className="mt-8 mb-8 text-5xl xl:text-6xl text-center font-bold leading-tight text-gray-800">
+          Discover the Heart of <span className="text-green-600">Ethiopia</span> on Your Plate
         </h1>
-        <p className="text-center text-gray-600 mb-8">
+        <p className="text-center text-gray-700 mb-10 text-lg">
           Traditional and Modern Recipes to Savor Every Flavor.
         </p>
-        <form className="rounded-full bg-white flex items-center px-4 py-2 shadow-md mb-10" action="/search">
-          <IoIosSearch className="w-5 h-5 mr-2 text-neutral-300" />
-          <input className="outline-none w-full placeholder:text-gray-600" type="text" placeholder="Search for recipes" />
+        <form className="rounded-full bg-white flex items-center px-5 py-2 shadow-lg mb-10 border-x-2 ">
+          <IoIosSearch className="w-6 h-6 mr-3 text-gray-500" />
+          <input
+            className="outline-none w-full placeholder-gray-500 text-gray-700 font-medium"
+            type="text"
+            placeholder="Search for recipes"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
         </form>
-        <CategoryList categories={categories} /> 
+        <CategoryList
+          categories={categories}
+          onCategorySelect={handleCategorySelect}
+          selectedCategories={selectedCategories}
+        />
       </div>
-      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {displayedRecipes.map(recipe => (
-          <Card key={recipe._id} recipe={recipe} />
-        ))}
-      </div>
-      <button
-        className="mt-12 mb-12 px-10 py-4 rounded bg-white text-yellow-600 border border-yellow-600 shadow-md font-medium"
-        onClick={() => setShowAll(!showAll)}
-      >
-        {showAll ? 'View Less' : 'View More'}
-      </button>
+      {loading ? (
+        <p className="text-center text-gray-700 mt-12 text-xl">Loading...</p>
+      ) : error ? (
+        <p className="text-center text-red-600 mt-12 text-xl">{error}</p>
+      ) : filteredRecipes.length > 0 ? (
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {displayedRecipes.map((recipe) => (
+            <Card key={recipe._id} recipe={recipe} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-gray-700 mt-12 text-xl">
+          No recipes match your search or selected categories.
+        </p>
+      )}
+      {filteredRecipes.length > 4 && (
+        <button
+          className="mt-12 mb-12 px-8 py-3 rounded-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white font-semibold border border-yellow-600 shadow-lg transition-transform transform hover:scale-105"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? 'View Less' : 'View More'}
+        </button>
+      )}
+      {/* Add the HighlightedSection here
+      <HighlightedSection /> */}
     </div>
   );
 };
