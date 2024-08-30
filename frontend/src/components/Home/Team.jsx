@@ -1,4 +1,3 @@
-
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const teamData = [
@@ -53,7 +52,8 @@ const Team = () => {
         </p>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
           {teamData.map((member) => (
-            <div key={member.id} className='bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105'>
+            <div key={member.id} className='bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105 relative'>
+              <div className='absolute top-0 left-0 w-full h-2 bg-purple-500 rounded-t-lg'></div>
               <img 
                 className='w-32 h-32 object-cover rounded-full mx-auto mb-4 border-4 border-gray-200 hover:border-gray-400 transition-colors duration-300'
                 src={member.image} 
@@ -68,15 +68,15 @@ const Team = () => {
               <p className='text-gray-500 text-center mb-4'>
                 {member.description}
               </p>
-              <div className='flex justify-center space-x-4'>
+              <div className='flex justify-center space-x-6 py-2'>
                 <a href={member.social.facebook} target='_blank' rel='noopener noreferrer'>
-                  <i className='fab fa-facebook-f text-blue-600 hover:text-blue-800 transition-colors duration-300'></i>
+                  <i className='fab fa-facebook-f text-blue-600 hover:text-blue-800 transition-colors duration-300 text-xl'></i>
                 </a>
                 <a href={member.social.twitter} target='_blank' rel='noopener noreferrer'>
-                  <i className='fab fa-twitter text-blue-400 hover:text-blue-600 transition-colors duration-300'></i>
+                  <i className='fab fa-twitter text-blue-400 hover:text-blue-600 transition-colors duration-300 text-xl'></i>
                 </a>
                 <a href={member.social.linkedin} target='_blank' rel='noopener noreferrer'>
-                  <i className='fab fa-linkedin-in text-blue-700 hover:text-blue-900 transition-colors duration-300'></i>
+                  <i className='fab fa-linkedin-in text-blue-700 hover:text-blue-900 transition-colors duration-300 text-xl'></i>
                 </a>
               </div>
             </div>

@@ -21,22 +21,54 @@ exports.getAllReviews = async (req, res) => {
 // Add review
 exports.addReview = async (req, res) => {
     const { recipeId, comment, rating, userId } = req.body;
-
+  
     if (!recipeId || !comment || !rating || !userId) {
-        return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({ message: "All fields are required" });
     }
-
+  
     try {
-        const existingReview = await Review.findOne({ recipeId, userId });
-        if (existingReview) {
-            return res.status(400).json({ message: "You have already reviewed this recipe" });
-        }
-
-        const newReview = new Review({ recipeId, comment, rating, userId });
-        await newReview.save();
-        res.status(201).json(newReview);
+      const existingReview = await Review.findOne({ recipeId, userId });
+      if (existingReview) {
+        return res
+          .status(400)
+          .json({ message: "You have already reviewed this recipe" });
+      }
+  
+      // Create and save the new review
+      const newReview = new Review({ recipeId, comment, rating, userId });
+      await newReview.save();
+  
+      // Update the recipe document to include the new review ID
+      await mongoose.model("Recipe").findByIdAndUpdate(
+        recipeId,
+        { $push: { reviwe: newReview._id } }, 
+        { new: true }
+      );
+  
+      res.status(201).json(newReview);
     } catch (error) {
-        console.error('Error adding review:', error);
-        res.status(500).json({ message: error.message });
+      console.error("Error adding review:", error);
+      res.status(500).json({ message: error.message });
     }
-};
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
