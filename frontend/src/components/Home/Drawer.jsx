@@ -2,30 +2,27 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:7070";
-  
-  // Retrieve access token from localStorage
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:7070';
   const token = JSON.parse(localStorage.getItem('user'))?.accessToken;
 
-  // State for profile picture
   const [profilePicture, setProfilePicture] = useState(user.profileImage || '');
+  const [bio, setBio] = useState(user.bio || '');
+  const [editBio, setEditBio] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (user && user._id) {
         try {
-          const response = await axios.get(
-            `${backendUrl}/api/user/getuser/${user._id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await axios.get(`${backendUrl}/api/user/getuser/${user._id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
-          if (response.data.user && response.data.user.profileImage) {
+          if (response.data.user) {
             const updatedProfileImage = `${backendUrl}${response.data.user.profileImage}?${new Date().getTime()}`;
             setProfilePicture(updatedProfileImage);
+            setBio(response.data.user.bio || '');
           }
         } catch (error) {
           console.error('Error fetching user profile:', error);
@@ -43,19 +40,15 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
     if (file) {
       const formData = new FormData();
       formData.append('profilePicture', file);
-    
+
       try {
-        const response = await axios.put(
-          `${backendUrl}/api/user/updateprofile/${user._id}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-    
+        const response = await axios.put(`${backendUrl}/api/user/updateprofile/${user._id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         if (response.status === 200 && response.data && response.data.profileImage) {
           const updatedProfileImage = `${backendUrl}${response.data.profileImage}?${new Date().getTime()}`;
           setProfilePicture(updatedProfileImage);
@@ -66,6 +59,30 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
     }
   };
 
+  const handleBioUpdate = async () => {
+    try {
+      const response = await axios.put(
+        `${backendUrl}/api/user/updateprofile/${user._id}`,
+        { bio },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setEditBio(false);
+      }
+    } catch (error) {
+      console.error('Error updating bio:', error.response?.data || error.message);
+    }
+  };
+
+  const handleMyRecipe = () => {
+    console.log('Fetching user recipes...');
+  };
+
   const handleLogoutAndCloseDrawer = () => {
     handleLogout();
     handleClose();
@@ -73,16 +90,18 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
 
   return (
     <div
-      className={`fixed z-30 top-0 right-0 w-80 h-full bg-white shadow-lg transition-transform duration-300 ${
-        isDrawerOpen ? 'transform translate-x-0' : 'transform translate-x-full'
+      className={`fixed z-30 top-16 right-4 w-80 bg-gradient-to-br from-gray-100 via-white to-gray-200 shadow-2xl rounded-lg border border-gray-300 transition-transform duration-300 ease-in-out transform ${
+        isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
+      style={{ maxHeight: 'calc(100vh - 4rem)', padding: '1rem' }}
     >
       <div className="flex flex-col h-full">
         {/* Header Section */}
-        <div className="flex justify-end items-center p-4 border-b border-gray-200 bg-gray-100">
+        <div className="flex justify-between items-center p-4 border-b border-gray-200 bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900 rounded-t-lg text-white">
+          <h2 className="text-lg font-semibold">Profile</h2>
           <button
             onClick={handleClose}
-            className="text-gray-600 hover:text-gray-900 focus:outline-none"
+            className="text-white hover:text-yellow-400 focus:outline-none transition-transform duration-200 transform hover:scale-110"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -91,38 +110,51 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* Profile Section */}
-        <div className="flex flex-col items-center p-6 border-b border-gray-200">
+        {/* Profile Picture Section */}
+        <div className="flex justify-center p-4 bg-gradient-to-t from-gray-200 via-white to-gray-200 border-b border-gray-200">
           <div className="relative">
-            <div className="h-24 w-24 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-2xl border-4 border-gray-300 overflow-hidden">
+            <div className="h-24 w-24 rounded-full bg-gray-300 flex items-center justify-center border-4 border-gray-400 overflow-hidden shadow-lg transition-transform duration-300 transform hover:scale-105">
               {profilePicture ? (
-                <img
-                  src={profilePicture}
-                  alt="User Profile"
-                  className="h-full w-full object-cover"
-                />
+                <img src={profilePicture} alt="User Profile" className="h-full w-full object-cover" />
               ) : (
-                <span>{user.name[0].toUpperCase()}</span>
+                <span className="text-xl font-bold text-gray-700">{user.name[0].toUpperCase()}</span>
               )}
             </div>
 
             <label
               htmlFor="profile-upload"
-              className="absolute bottom-0 right-0 h-8 w-8 bg-white rounded-full flex items-center justify-center cursor-pointer border-2 border-gray-300 shadow-md"
+              className="absolute bottom-0 right-0 h-8 w-8 bg-white rounded-full flex items-center justify-center cursor-pointer border-2 border-gray-400 shadow-md transition-transform duration-200 hover:scale-110"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 text-gray-600"
+                className="h-4 w-4 text-gray-700"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <input id="profile-upload" type="file" className="hidden" onChange={handleProfilePictureUpload} />
+            </label>
+          </div>
+        </div>
+
+        {/* Bio Section */}
+        <div className="p-4 bg-gradient-to-r from-white to-gray-100 border-b border-gray-200">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-sm font-semibold text-gray-800">Bio</h3>
+            <button
+              onClick={() => setEditBio(!editBio)}
+              className="text-blue-700 hover:text-blue-800 focus:outline-none transition-transform duration-200 transform hover:scale-110"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -131,42 +163,49 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="M12 4v16m8-8H4"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                 />
               </svg>
-              <input
-                id="profile-upload"
-                type="file"
-                className="hidden"
-                onChange={handleProfilePictureUpload}
-              />
-            </label>
+            </button>
           </div>
-          <p className="text-lg font-semibold mt-3">{user.name}</p>
-          <p className="text-gray-600">{user.email}</p>
+          {editBio ? (
+            <div className="relative">
+              <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                className="w-full p-2 border rounded-lg resize-none focus:outline-none focus:border-blue-500 shadow-md"
+                rows="2"
+              />
+              <button
+                onClick={handleBioUpdate}
+                className="absolute bottom-0 right-0 bg-blue-600 text-white text-xs py-1 px-2 rounded-lg hover:bg-blue-700 transition duration-200 transform hover:scale-105"
+              >
+                Save Bio
+              </button>
+            </div>
+          ) : (
+            <div>
+              <p className="text-sm text-gray-600">{bio || 'Click to add your bio.'}</p>
+            </div>
+          )}
         </div>
 
         {/* My Recipes Section */}
-        <div className="flex-1 p-6 border-b border-gray-200 bg-gray-50">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">My Recipes</h3>
-          <ul className="space-y-3">
-            {user.recipes && user.recipes.length > 0 ? (
-              user.recipes.map((recipe, index) => (
-                <li key={index} className="text-gray-700 bg-gray-100 p-2 rounded-lg shadow-sm">
-                  {recipe}
-                </li>
-              ))
-            ) : (
-              <p className="text-gray-500">No recipes found.</p>
-            )}
-          </ul>
+        <div className="p-4 bg-gradient-to-r from-gray-100 via-white to-gray-200 border-b border-gray-200">
+          <h3 className="text-sm font-semibold text-gray-800 mb-2">My Recipes</h3>
+          <button
+            onClick={handleMyRecipe}
+            className="bg-blue-700 text-white text-xs py-2 px-4 rounded-lg hover:bg-blue-800 transition duration-200 transform hover:scale-105"
+          >
+            View My Recipes
+          </button>
         </div>
 
-        {/* Logout Button */}
-        <div className="p-4 border-t border-gray-200 bg-gray-100">
+        {/* Logout Section */}
+        <div className="flex justify-end p-4 bg-gradient-to-r from-white to-gray-100 rounded-b-lg">
           <button
             onClick={handleLogoutAndCloseDrawer}
-            className="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 transition duration-200 w-full"
+            className="bg-red-500 text-white text-xs py-2 px-4 rounded-lg hover:bg-red-600 transition-transform duration-200 transform hover:scale-105"
           >
             Logout
           </button>

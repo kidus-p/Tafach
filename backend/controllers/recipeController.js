@@ -91,3 +91,11 @@ exports.getRecipe = async (req, res) => {
     res.status(500).json({ message: "Error retrieving the recipe", error: error.message });
   }
 };
+
+
+// Update a recipe
+exports.updateRecipe = async (req, res) => {}
+
+
+// Delete a recipe
+exports.deleteRecipe = async (req, res) => {}

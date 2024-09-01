@@ -154,7 +154,7 @@ const RecipeSection = () => {
   const displayedRecipes = showAll ? filteredRecipes : filteredRecipes.slice(0, 4);
 
   return (
-    <div className="flex flex-col items-center min-h-screen px-6 xl:px-12 bg-gray-50">
+    <div className="flex flex-col items-center min-h-screen px-6 xl:px-12 bg-gray-50 py-12">
       <div className="w-full md:w-4/5 lg:w-3/4 mb-12">
         <h1 className="mt-8 mb-8 text-5xl xl:text-6xl text-center font-bold leading-tight text-gray-800">
           Discover the Heart of <span className="text-green-600">Ethiopia</span> on Your Plate
@@ -162,7 +162,7 @@ const RecipeSection = () => {
         <p className="text-center text-gray-700 mb-10 text-lg">
           Traditional and Modern Recipes to Savor Every Flavor.
         </p>
-        <form className="rounded-full bg-white flex items-center px-5 py-2 shadow-lg mb-10 border-x-2 ">
+        <form className="rounded-full bg-white flex items-center px-5 py-2 shadow-lg mb-10 border-x-2 border-gray-300">
           <IoIosSearch className="w-6 h-6 mr-3 text-gray-500" />
           <input
             className="outline-none w-full placeholder-gray-500 text-gray-700 font-medium"
@@ -201,8 +201,8 @@ const RecipeSection = () => {
           {showAll ? 'View Less' : 'View More'}
         </button>
       )}
-      {/* Add the HighlightedSection here
-      <HighlightedSection /> */}
+      {/* Add the HighlightedSection here */}
+      <HighlightedSection />
     </div>
   );
 };
