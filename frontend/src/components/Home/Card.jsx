@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { PiTimer } from "react-icons/pi";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart, AiOutlineStar } from "react-icons/ai"; // Import a placeholder icon for no ratings
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -27,14 +27,14 @@ const Card = ({ recipe }) => {
         const response = await axios.get(`${backendUrl}/api/review/getallreviews/${recipe._id}`);
         const reviews = response.data;
 
-        if (reviews.length) {
+        if (Array.isArray(reviews) && reviews.length) {
           // Calculate the average rating from reviews
           const totalRatings = reviews.reduce((acc, review) => acc + review.rating, 0);
           const avgRating = totalRatings / reviews.length;
           setAverageRating(avgRating.toFixed(1)); // Set average rating with one decimal place
           setRatingCount(reviews.length); // Set the number of ratings
         } else {
-          setAverageRating("No ratings yet");
+          setAverageRating(null); // Set to null or another value if no ratings
           setRatingCount(0);
         }
       } catch (error) {
@@ -77,16 +77,23 @@ const Card = ({ recipe }) => {
         className="w-full h-48 object-cover rounded-t-lg"
       />
 
-      {/* Rating stars moved to bottom-right corner */}
+      {/* Rating stars or placeholder icon */}
       <div className="absolute bottom-9 right-2 flex items-center">
-        {averageRating && (
+        {averageRating !== null ? (
           <div className="flex items-center text-yellow-500 mr-2">
             {renderStars(parseFloat(averageRating))}
           </div>
+        ) : (
+          <div className="flex items-center text-gray-500 mr-2">
+            <AiOutlineStar className="w-5 h-5" />
+            <span className="text-gray-600 text-xs">Not rated yet</span>
+          </div>
         )}
-        <span className="text-gray-600 text-xs">
-          {averageRating} ({ratingCount})
-        </span>
+        {ratingCount > 0 && (
+          <span className="text-gray-600 text-xs">
+            {averageRating} ({ratingCount})
+          </span>
+        )}
       </div>
 
       {/* Heart icon moved to top-right corner */}
