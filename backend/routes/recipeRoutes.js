@@ -1,7 +1,7 @@
 const express = require("express");
 const route = express.Router();
 // const { authenticateToken } = require("../middleware/authMiddleware");
-const { getAllRecipes, getRecipe, addRecipe ,deleteRecipe ,updateRecipe } = require("../controllers/recipeController");
+const { getRecipes, getRecipe, addRecipe ,deleteRecipe ,updateRecipe } = require("../controllers/recipeController");
 const multer = require("multer");
 const path = require("path");
 const fs = require('fs');
