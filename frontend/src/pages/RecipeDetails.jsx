@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useAuth } from '../components/Home/useAuth';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { FaClock, FaStar } from 'react-icons/fa';
+import { FaClock, FaStar, FaUserCircle } from 'react-icons/fa';
 import format from 'date-fns/format';
 import { differenceInHours } from 'date-fns';
 
@@ -95,27 +95,30 @@ const RecipeDetails = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen py-12 px-6">
+    <div className="bg-gray-100 min-h-screen py-12 px-6">
       {recipe ? (
-        <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
           {/* Recipe Image */}
           <div className="relative">
             <img
               src={recipeImageUrl}
               alt={recipe.title}
-              className="w-full h-72 object-cover rounded-t-lg"
+              className="w-full h-80 object-cover rounded-t-lg"
             />
           </div>
           {/* Recipe Content */}
           <div className="p-6">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">{recipe.title}</h1>
-            <p className="text-gray-600 mb-6">{recipe.description}</p>
+            <h1 className="text-4xl font-extrabold text-gray-800 mb-4">{recipe.title}</h1>
+            <p className="text-gray-700 mb-6 text-lg">{recipe.description}</p>
             <div className="flex flex-wrap gap-4 mb-8">
               <span className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md">
                 <FaClock className="mr-2" /> {recipe.cookingTime} min
               </span>
               <span className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg shadow-md">
                 Servings: {recipe.serving}
+              </span>
+              <span className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg shadow-md">
+                Difficulty: {recipe.difficulty}
               </span>
             </div>
             <div className="mb-8">
@@ -146,18 +149,27 @@ const RecipeDetails = () => {
                   reviews.map((review) => (
                     <div
                       key={review._id}
-                      className="p-4 bg-white border rounded shadow-md flex items-start space-x-4"
+                      className="p-4 bg-white border rounded-lg shadow-md flex items-start space-x-4 hover:bg-gray-50 transition-colors duration-300"
                     >
                       <div className="flex-shrink-0">
-                        <img
-                          src={review.userId?.profileImage ? `${backendUrl}${review.userId.profileImage}` : 'default-profile.png'}
-                          alt={review.userId?.name || 'Anonymous'}
-                          className="w-12 h-12 object-cover rounded-full border border-gray-300"
-                        />
+                        {review.userId?.profileImage ? (
+                          <img
+                            src={`${backendUrl}${review.userId.profileImage}`}
+                            alt={review.userId?.name || 'Anonymous'}
+                            className="w-12 h-12 object-cover rounded-full border border-gray-300"
+                          />
+                        ) : (
+                          <FaUserCircle className="w-12 h-12 text-gray-400" />
+                        )}
                       </div>
                       <div className="flex-1">
                         <div className="flex justify-between items-center mb-2">
-                          <span className="font-semibold text-gray-800">{review.userId?.name || 'Anonymous'}</span>
+                          <div className="flex items-center space-x-2">
+                            <span className="font-semibold text-gray-800">{review.userId?.name || 'Anonymous'}</span>
+                            {review.userId?._id === user?._id && (
+                              <span className="text-sm text-green-500 font-medium">You</span>
+                            )}
+                          </div>
                           <div className="flex items-center text-yellow-500">
                             {[...Array(5)].map((_, index) => (
                               <FaStar
@@ -167,8 +179,8 @@ const RecipeDetails = () => {
                             ))}
                           </div>
                         </div>
-                        <p className="text-gray-700">{review.comment}</p>
-                        <span className="text-xs text-gray-500 block mt-2">
+                        <p className="text-gray-700 mb-2 font-medium">{review.comment}</p>
+                        <span className="text-xs text-gray-500 block">
                           {timeAgo(review.createdAt)}
                         </span>
                       </div>
@@ -186,7 +198,7 @@ const RecipeDetails = () => {
                     name="comment"
                     value={newReview.comment}
                     onChange={handleInputChange}
-                    placeholder="Write your review..."
+                    placeholder="Write your review here..."
                     className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
                     required
                   ></textarea>
@@ -205,7 +217,7 @@ const RecipeDetails = () => {
                   {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
                   <button
                     type="submit"
-                    className="py-2 px-4 text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors duration-300"
                   >
                     Submit Review
                   </button>
@@ -215,7 +227,9 @@ const RecipeDetails = () => {
           </div>
         </div>
       ) : (
-        <p>Loading...</p>
+        <div className="text-center py-12">
+          <p className="text-gray-700 text-xl">Loading recipe details...</p>
+        </div>
       )}
     </div>
   );

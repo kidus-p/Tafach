@@ -97,7 +97,7 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
     >
       <div className="flex flex-col h-full">
         {/* Header Section */}
-        <div className="flex justify-between items-center p-4 border-b border-gray-200 bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900 rounded-t-lg text-white">
+        <div className="flex justify-between items-center p-4 border-b border-gray-200 bg-gradient-to-r from-green-900 via-green-700 to-green-900 rounded-t-lg text-white">
           <h2 className="text-lg font-semibold">Profile</h2>
           <button
             onClick={handleClose}
@@ -173,12 +173,12 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
               <textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
-                className="w-full p-2 border rounded-lg resize-none focus:outline-none focus:border-blue-500 shadow-md"
+                className="w-full p-2 border rounded-lg resize-none focus:outline-none focus:border-green-500 shadow-md"
                 rows="2"
               />
               <button
                 onClick={handleBioUpdate}
-                className="absolute bottom-0 right-0 bg-blue-600 text-white text-xs py-1 px-2 rounded-lg hover:bg-blue-700 transition duration-200 transform hover:scale-105"
+                className="absolute bottom-0 right-0 bg-green-600 text-white text-xs py-1 px-2 rounded-lg hover:bg-green-700 transition duration-200 transform hover:scale-105"
               >
                 Save Bio
               </button>
@@ -195,7 +195,7 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
           <h3 className="text-sm font-semibold text-gray-800 mb-2">My Recipes</h3>
           <button
             onClick={handleMyRecipe}
-            className="bg-blue-700 text-white text-xs py-2 px-4 rounded-lg hover:bg-blue-800 transition duration-200 transform hover:scale-105"
+            className="bg-green-700 text-white font-bold text-xs py-2 px-4 rounded-lg hover:bg-green-800 transition duration-200 transform hover:scale-105"
           >
             View My Recipes
           </button>
@@ -205,7 +205,7 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
         <div className="flex justify-end p-4 bg-gradient-to-r from-white to-gray-100 rounded-b-lg">
           <button
             onClick={handleLogoutAndCloseDrawer}
-            className="bg-red-500 text-white text-xs py-2 px-4 rounded-lg hover:bg-red-600 transition-transform duration-200 transform hover:scale-105"
+            className="bg-red-500 text-white text-xs py-2 px-4 font-bold rounded-lg hover:bg-red-600 transition-transform duration-200 transform hover:scale-105"
           >
             Logout
           </button>
