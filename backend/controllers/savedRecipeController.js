@@ -1,4 +1,4 @@
-const SavedRecipe = require("../modules/savedRecipe.model");
+const SavedRecipe = require("../modules/savedRecipes.model");
 const mongoose = require("mongoose");
 
 // get all saved recipes
