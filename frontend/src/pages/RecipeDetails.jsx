@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { FaClock, FaStar } from 'react-icons/fa';
 import format from 'date-fns/format';
+import { differenceInHours } from 'date-fns';
 
 const RecipeDetails = () => {
   const { id } = useParams();
@@ -45,6 +46,7 @@ const RecipeDetails = () => {
   const handleStarClick = (rating) => {
     setNewReview({ ...newReview, rating });
   };
+
   const handleSubmitReview = async (e) => {
     e.preventDefault();
   
@@ -81,14 +83,21 @@ const RecipeDetails = () => {
       }
     }
   };
-  
 
   const recipeImageUrl = recipe ? `${backendUrl}${recipe.recipeImage}` : '';
 
+  const timeAgo = (date) => {
+    const hours = differenceInHours(new Date(), new Date(date));
+    if (hours < 24) {
+      return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    }
+    return format(new Date(date), 'MMM d, yyyy');
+  };
+
   return (
-    <div className="bg-gray-100 min-h-screen py-12 px-6">
+    <div className="bg-white min-h-screen py-12 px-6">
       {recipe ? (
-        <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
           {/* Recipe Image */}
           <div className="relative">
             <img
@@ -137,7 +146,7 @@ const RecipeDetails = () => {
                   reviews.map((review) => (
                     <div
                       key={review._id}
-                      className="p-4 bg-gray-200 rounded-lg shadow-md flex items-start space-x-4"
+                      className="p-4 bg-white border rounded shadow-md flex items-start space-x-4"
                     >
                       <div className="flex-shrink-0">
                         <img
@@ -160,7 +169,7 @@ const RecipeDetails = () => {
                         </div>
                         <p className="text-gray-700">{review.comment}</p>
                         <span className="text-xs text-gray-500 block mt-2">
-                          {format(new Date(review.createdAt), 'MMM d, yyyy h:mm a')}
+                          {timeAgo(review.createdAt)}
                         </span>
                       </div>
                     </div>
@@ -178,7 +187,7 @@ const RecipeDetails = () => {
                     value={newReview.comment}
                     onChange={handleInputChange}
                     placeholder="Write your review..."
-                    className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
+                    className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
                     required
                   ></textarea>
                   <div className="flex items-center mb-4">
@@ -196,7 +205,7 @@ const RecipeDetails = () => {
                   {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
                   <button
                     type="submit"
-                    className="py-2 px-4 text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition duration-200"
+                    className="py-2 px-4 text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     Submit Review
                   </button>
@@ -206,13 +215,10 @@ const RecipeDetails = () => {
           </div>
         </div>
       ) : (
-        <div className="text-center py-16">
-          <p className="text-xl text-gray-700">Loading recipe details...</p>
-        </div>
+        <p>Loading...</p>
       )}
     </div>
   );
 };
 
 export default RecipeDetails;
-

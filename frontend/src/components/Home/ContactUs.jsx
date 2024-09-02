@@ -31,23 +31,23 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="bg-gray-50 py-12 px-6 lg:px-12">
+    <div className="bg-white py-12 px-6 lg:px-12">
       <div className="container mx-auto max-w-6xl">
-        <h2 className="text-3xl lg:text-4xl font-bold mb-6 text-center text-gray-800">Contact Us</h2>
+        <h2 className="text-3xl lg:text-4xl font-bold mb-12 text-center text-gray-800">Contact Us</h2>
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-start">
           <div className="lg:w-1/3 mb-10 lg:mb-0">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800">Get in Touch</h3>
             <div className="flex items-center mb-4">
               <FaPhone className="text-gray-600 text-2xl mr-3" />
-              <span className="text-gray-700">+123 456 7890</span>
+              <span className="text-gray-700">+251 913 173 163</span>
             </div>
             <div className="flex items-center mb-4">
               <FaEnvelope className="text-gray-600 text-2xl mr-3" />
-              <span className="text-gray-700">contact@example.com</span>
+              <span className="text-gray-700">tizazab@example.com</span>
             </div>
             <div className="flex items-center">
               <IoMdMap className="text-gray-600 text-2xl mr-3" />
-              <span className="text-gray-700">123 Main St, Anytown, USA</span>
+              <span className="text-gray-700"> Signal Camp , A.A , Ethiopia</span>
             </div>
           </div>
           <div className="lg:w-2/3">

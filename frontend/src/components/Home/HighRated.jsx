@@ -47,13 +47,13 @@ const HighlightedSection = () => {
   }, []); // Empty dependency array to run once on mount
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4  mt-8">Highlighted Recipes</h2>
-      <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {recipes.map((recipe) => (
-            <Card key={recipe._id} recipe={recipe} />
-          ))}
-        </div>
+    <div className="p-8 bg-white">
+      <h2 className="text-5xl font-extrabold mb-16 mt-16 text-black "><span className='text-green-500'>Highlighted</span> Recipes</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {recipes.map((recipe) => (
+          <Card key={recipe._id} recipe={recipe} />
+        ))}
+      </div>
     </div>
   );
 };

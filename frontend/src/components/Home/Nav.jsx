@@ -30,7 +30,7 @@ const Navbar = () => {
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
   return (
-    <nav className="absolute top-5 left-8 right-8 bg-[#f9f7f2] text-gray-800 shadow-md rounded-lg z-50">
+    <nav className="absolute top-5 left-8 right-8 bg-white text-gray-800 shadow-md rounded-lg z-50">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         <div className="flex-shrink-0 flex items-center space-x-2">
           <Link to="/" className="text-2xl font-bold text-green-600 hover:text-green-800">

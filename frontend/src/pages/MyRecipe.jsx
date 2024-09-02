@@ -1,46 +1,63 @@
-import React, { useEffect, useState } from 'react';
+// src/pages/MyRecipes.jsx
+
+import  { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const MyRecipes = () => {
   const [recipes, setRecipes] = useState([]);
+  const navigate = useNavigate();
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:7070';
-  const token = JSON.parse(localStorage.getItem('user'))?.accessToken;
+  const userId = JSON.parse(localStorage.getItem('user'))?.userId;
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      try {
-        const response = await axios.get(`${backendUrl}/api/recipes`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (Array.isArray(response.data.recipes)) {
-          setRecipes(response.data.recipes);
-        } else {
-          console.error('Error: Recipes data is not an array');
-          setRecipes([]);
+      if (userId) {
+        try {
+          const response = await axios.get(`${backendUrl}/api/recipe/getallrecipes/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setRecipes(response.data);
+        } catch (error) {
+          console.error('Error fetching recipes:', error);
         }
-      } catch (error) {
-        console.error('Error fetching recipes:', error);
-        setRecipes([]);
       }
     };
 
     fetchRecipes();
-  }, [backendUrl, token]);
+  }, [userId, backendUrl]);
+
+  const handleRecipeClick = (recipeId) => {
+    navigate(`/recipe/${recipeId}`);
+  };
 
   return (
-    <div>
-      <h1>My Recipes</h1>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">My Recipes</h1>
       {recipes.length > 0 ? (
-        <ul>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {recipes.map((recipe) => (
-            <li key={recipe._id}>{recipe.name}</li>
+            <div
+              key={recipe._id}
+              className="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer"
+              onClick={() => handleRecipeClick(recipe._id)}
+            >
+              <img
+                src={`${backendUrl}${recipe.recipeImage}`}
+                alt={recipe.title}
+                className="w-full h-40 object-cover"
+              />
+              <div className="p-4">
+                <h2 className="text-lg font-semibold">{recipe.title}</h2>
+                <p className="text-gray-600">{recipe.cookingTime} min</p>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
-        <p>No recipes available.</p>
+        <p className="text-gray-600">You have no recipes yet.</p>
       )}
     </div>
   );
