@@ -1,18 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { PiTimer } from "react-icons/pi";
-import { AiOutlineHeart, AiOutlineStar } from "react-icons/ai"; // Import a placeholder icon for no ratings
+import { AiOutlineHeart, AiFillHeart, AiOutlineStar } from "react-icons/ai";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
+import { RiBookmarkFill, RiBookmarkLine } from "react-icons/ri"; // Import the bookmark icons
 import { useEffect, useState } from "react";
 import axios from "axios";
-import '../../css/imageFloating.css'; // Ensure this CSS file includes necessary styles for floating images
+import '../../css/imageFloating.css';
 
 const Card = ({ recipe }) => {
   const navigate = useNavigate();
   const [averageRating, setAverageRating] = useState(null);
   const [ratingCount, setRatingCount] = useState(0);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:7070";
 
-  // Construct the full URL for the images
   const recipeImageUrl = `${backendUrl}${recipe.recipeImage}`;
   const profileImageUrl = `${backendUrl}${recipe.createdBy.profileImage}`;
 
@@ -20,7 +22,6 @@ const Card = ({ recipe }) => {
     navigate(`/recipe/${recipe._id}`);
   };
 
-  // Fetch reviews and calculate average rating
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -28,13 +29,12 @@ const Card = ({ recipe }) => {
         const reviews = response.data;
 
         if (Array.isArray(reviews) && reviews.length) {
-          // Calculate the average rating from reviews
           const totalRatings = reviews.reduce((acc, review) => acc + review.rating, 0);
           const avgRating = totalRatings / reviews.length;
-          setAverageRating(avgRating.toFixed(1)); // Set average rating with one decimal place
-          setRatingCount(reviews.length); // Set the number of ratings
+          setAverageRating(avgRating.toFixed(1));
+          setRatingCount(reviews.length);
         } else {
-          setAverageRating(null); // Set to null or another value if no ratings
+          setAverageRating(null);
           setRatingCount(0);
         }
       } catch (error) {
@@ -47,7 +47,6 @@ const Card = ({ recipe }) => {
     fetchReviews();
   }, [recipe._id, backendUrl]);
 
-  // Function to render stars based on average rating
   const renderStars = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -66,6 +65,19 @@ const Card = ({ recipe }) => {
     return stars;
   };
 
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+  };
+
+  const handleSaveClick = (e) => {
+    e.stopPropagation();
+    setIsSaved(true);
+
+    setTimeout(() => {
+      setIsSaved(false);
+    }, 1000); // Reset the save state after 1 second
+  };
+
   return (
     <div
       className="bg-white shadow-md hover:shadow-lg transition-transform transform hover:scale-105 rounded-lg overflow-hidden relative cursor-pointer"
@@ -77,7 +89,6 @@ const Card = ({ recipe }) => {
         className="w-full h-48 object-cover rounded-t-lg"
       />
 
-      {/* Rating stars or placeholder icon */}
       <div className="absolute bottom-9 right-2 flex items-center">
         {averageRating !== null ? (
           <div className="flex items-center text-yellow-500 mr-2">
@@ -96,9 +107,25 @@ const Card = ({ recipe }) => {
         )}
       </div>
 
-      {/* Heart icon moved to top-right corner */}
-      <button className="absolute top-2 right-2 bg-gray-100 text-gray-600 p-2 rounded-full hover:bg-gray-200 transition duration-300 shadow-md">
-        <AiOutlineHeart className="w-6 h-6" />
+      <button
+        className={`absolute top-2 right-2 bg-gray-100 text-gray-600 p-2 rounded-full hover:bg-gray-200 transition duration-300 shadow-md ${isFavorite ? 'text-red-500' : 'text-gray-600'}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleFavorite();
+        }}
+      >
+        {isFavorite ? <AiFillHeart className="w-6 h-6" /> : <AiOutlineHeart className="w-6 h-6" />}
+      </button>
+
+      <button
+        className={`absolute top-2 left-2 bg-gray-100 text-gray-600 p-2 rounded-full hover:bg-gray-200 transition duration-300 shadow-md ${isSaved ? 'animate-save' : ''}`}
+        onClick={handleSaveClick}
+        style={{
+          transform: isSaved ? 'scale(1.2)' : 'scale(1)',
+          transition: 'transform 0.3s ease-out',
+        }}
+      >
+        {isSaved ? <RiBookmarkFill className="w-6 h-6" /> : <RiBookmarkLine className="w-6 h-6" />}
       </button>
 
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 flex items-center justify-center bg-white border-4 border-white rounded-full shadow-lg z-10">

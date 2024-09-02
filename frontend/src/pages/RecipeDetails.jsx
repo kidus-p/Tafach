@@ -117,9 +117,9 @@ const RecipeDetails = () => {
               <span className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg shadow-md">
                 Servings: {recipe.serving}
               </span>
-              <span className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg shadow-md">
+              {/* <span className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg shadow-md">
                 Difficulty: {recipe.difficulty}
-              </span>
+              </span> */}
             </div>
             <div className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">Ingredients</h2>

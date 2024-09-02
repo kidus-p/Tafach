@@ -1,5 +1,6 @@
 import React from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaYoutube, FaGithub } from 'react-icons/fa';
 
 const Footer = () => {
   return (
@@ -131,9 +132,9 @@ const Footer = () => {
                 href='https://facebook.com'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-white hover:text-blue-500 transition-colors duration-300 text-3xl transform hover:scale-110'
+                className='text-white hover:text-blue-600 transition-colors duration-300 text-3xl transform hover:scale-110'
               >
-                <i className='fab fa-facebook-f'></i>
+                <FaFacebookF />
               </a>
               <a
                 href='https://twitter.com'
@@ -141,7 +142,7 @@ const Footer = () => {
                 rel='noopener noreferrer'
                 className='text-white hover:text-blue-400 transition-colors duration-300 text-3xl transform hover:scale-110'
               >
-                <i className='fab fa-twitter'></i>
+                <FaTwitter />
               </a>
               <a
                 href='https://instagram.com'
@@ -149,23 +150,23 @@ const Footer = () => {
                 rel='noopener noreferrer'
                 className='text-white hover:text-pink-500 transition-colors duration-300 text-3xl transform hover:scale-110'
               >
-                <i className='fab fa-instagram'></i>
+                <FaInstagram />
               </a>
               <a
                 href='https://linkedin.com'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-white hover:text-blue-600 transition-colors duration-300 text-3xl transform hover:scale-110'
+                className='text-white hover:text-blue-700 transition-colors duration-300 text-3xl transform hover:scale-110'
               >
-                <i className='fab fa-linkedin-in'></i>
+                <FaLinkedinIn />
               </a>
               <a
                 href='https://youtube.com'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-white hover:text-red-500 transition-colors duration-300 text-3xl transform hover:scale-110'
+                className='text-white hover:text-red-600 transition-colors duration-300 text-3xl transform hover:scale-110'
               >
-                <i className='fab fa-youtube'></i>
+                <FaYoutube />
               </a>
               <a
                 href='https://github.com'
@@ -173,7 +174,7 @@ const Footer = () => {
                 rel='noopener noreferrer'
                 className='text-white hover:text-gray-400 transition-colors duration-300 text-3xl transform hover:scale-110'
               >
-                <i className='fab fa-github'></i>
+                <FaGithub />
               </a>
             </div>
           </div>
@@ -185,6 +186,6 @@ const Footer = () => {
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;
