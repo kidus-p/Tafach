@@ -7,7 +7,7 @@ const MyRecipes = () => {
   const navigate = useNavigate();
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:7070';
   const userId = JSON.parse(localStorage.getItem('user'))?.userId;
-  const token = JSON.parse(localStorage.getItem('user'))?.token; // Add token retrieval
+  const token = JSON.parse(localStorage.getItem('user'))?.token;
 
   useEffect(() => {
     const fetchRecipes = async () => {
