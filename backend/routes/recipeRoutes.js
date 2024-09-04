@@ -1,7 +1,7 @@
 const express = require("express");
 const route = express.Router();
 // const { authenticateToken } = require("../middleware/authMiddleware");
-const { getAllRecipes, getRecipe, addRecipe ,deleteRecipe ,updateRecipe } = require("../controllers/recipeController");
+const { getAllRecipes, getRecipe, addRecipe ,deleteRecipe ,updateRecipe ,getUserRecipes } = require("../controllers/recipeController");
 const multer = require("multer");
 const path = require("path");
 const fs = require('fs');
@@ -46,12 +46,13 @@ route.get("/getrecipe/:id", getRecipe);
 
 
 // delete recipe
-route.delete("/deleterecipe/:id", deleteRecipe)
+route.delete("/deleterecipe/:recipeId", deleteRecipe)
 
 // updaterecipe
  route.put("/updaterecipe/:id",upload.single('recipeImage'), updateRecipe);
 
-
+// get a user recipe
+ route.get("/getuserrecipe/:userId", getUserRecipes);
 
 
 module.exports = route;
