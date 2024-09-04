@@ -36,6 +36,30 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
+// send email
+  exports.sendEmail = async (req, res) => {
+    try {
+      const { name, email, message } = req.body;
+      const mailOptions = {
+        from: email,
+        to: 'tizazab752@gmail.com',
+        subject: `New contact form submission from ${name}`,
+        text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+      };
+  
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return res.status(500).json({ success: false, error: error.toString() });
+        }
+        res.status(200).json({ success: true, message: 'Email sent: ' + info.response });
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, error: error.toString() });
+    }
+  }
+
+
 // send verify email
 const sendVerifyEmail = async (user, token) => {
   const url = `http://localhost:5173/verify/${token}`;

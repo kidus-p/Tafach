@@ -154,7 +154,7 @@ const RecipeSection = () => {
   const displayedRecipes = showAll ? filteredRecipes : filteredRecipes.slice(0, 4);
 
   return (
-    <div className="flex flex-col items-center min-h-screen px-6 xl:px-12 bg-gray-50 py-12">
+    <div className="flex flex-col items-center min-h-screen px-6 xl:px-12 bg-white py-12">
       <div className="w-full md:w-4/5 lg:w-3/4 mb-12">
         <h1 className="mt-8 mb-8 text-5xl xl:text-6xl text-center font-bold leading-tight text-gray-800">
           Discover the Heart of <span className="text-green-600">Ethiopia</span> on Your Plate
@@ -195,7 +195,7 @@ const RecipeSection = () => {
       )}
       {filteredRecipes.length > 4 && (
         <button
-          className="mt-12 mb-12 px-8 py-3 rounded-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white font-semibold border border-yellow-600 shadow-lg transition-transform transform hover:scale-105"
+          className="mt-12 mb-12 px-8 py-3 rounded  text-yellow-800 font-semibold border border-yellow-600 shadow-lg transition-transform transform hover:scale-110 hover:shadow-2xl hover:brightness-75"
           onClick={() => setShowAll(!showAll)}
         >
           {showAll ? 'View Less' : 'View More'}
