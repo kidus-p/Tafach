@@ -173,7 +173,7 @@ const Card = ({ recipe }) => {
 
   return (
     <div
-      className="bg-white shadow-sm rounded-lg overflow-hidden relative mb-5 cursor-pointer max-w-[600px] mx-auto hover:shadow-"
+      className="bg-white shadow-sm rounded-lg overflow-hidden relative mb-5 cursor-pointer max-w-[600px] mx-auto hover:shadow-2xl transition-shadow duration-300 transform hover:scale-110"
       onClick={handleCardClick}
     >
       {/* Image Section */}
