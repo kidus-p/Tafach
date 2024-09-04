@@ -106,7 +106,6 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
         }
       );
       setSavedRecipes(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching saved recipes:", error);
     }
@@ -177,6 +176,24 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
     handleClose();
   };
 
+  const handleDeleteRecipe = async (recipeId) => {
+    try {
+      await axios.delete(`${backendUrl}/api/recipe/deleterecipe/${recipeId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setMyRecipes(myRecipes.filter((recipe) => recipe._id !== recipeId));
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+    }
+  };
+
+  const handleUpdateRecipe = (recipeId) => {
+    // Redirect to the update recipe page or open a modal for updating
+    console.log("Update recipe:", recipeId);
+  };
+
   return (
     <div
       className={`fixed z-30 top-0 right-0 bottom-0 left-0 flex justify-center items-center transition-transform duration-300 ease-in-out transform ${
@@ -184,7 +201,7 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
       }`}
     >
       <div
-        className="w-full max-w-5xl h-full max-h-[90vh] bg-gradient-to-br from-gray-100 via-white to-gray-200 shadow-2xl rounded-lg border border-gray-300"
+        className="w-full max-w-15xl h-full max-h-[90vh] bg-gradient-to-br from-gray-100 via-white to-gray-200 shadow-2xl rounded-lg border border-gray-300"
         style={{ margin: "2rem" }}
       >
         <div className="flex flex-col h-full">
@@ -215,7 +232,7 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
           {/* Profile Info Section */}
           <div className="flex p-4 bg-gradient-to-t from-gray-200 via-white to-gray-200 border-b border-gray-200">
             <div className="flex-shrink-0 mr-4">
-              <div className="h-24 w-24 rounded-full bg-gray-300 flex items-center justify-center border-4 border-gray-400 overflow-hidden shadow-lg transition-transform duration-300 transform hover:scale-105">
+              <div className="relative h-24 w-24 rounded-full bg-gray-300 flex items-center justify-center border-4 border-gray-400 overflow-hidden shadow-lg transition-transform duration-300 transform hover:scale-105">
                 {profilePicture ? (
                   <img
                     src={profilePicture}
@@ -227,32 +244,32 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                     {user.name[0].toUpperCase()}
                   </span>
                 )}
-              </div>
-              <label
-                htmlFor="profile-upload"
-                className="absolute bottom-0 right-0 h-8 w-8 bg-white rounded-full flex items-center justify-center cursor-pointer border-2 border-gray-400 shadow-md transition-transform duration-200 hover:scale-110"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-gray-700"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                <label
+                  htmlFor="profile-upload"
+                  className="absolute bottom-0 right-0 h-8 w-8 bg-white rounded-full flex items-center justify-center cursor-pointer border-2 border-gray-400 shadow-md transition-transform duration-200 hover:scale-110"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 4v16m8-8H4"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-gray-700"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  <input
+                    id="profile-upload"
+                    type="file"
+                    className="hidden"
+                    onChange={handleProfilePictureUpload}
                   />
-                </svg>
-                <input
-                  id="profile-upload"
-                  type="file"
-                  className="hidden"
-                  onChange={handleProfilePictureUpload}
-                />
-              </label>
+                </label>
+              </div>
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gray-800">{name}</h3>
@@ -283,20 +300,63 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
           {/* Content Section Based on Tab */}
           <div className="flex-grow p-4 bg-white overflow-y-auto">
             {activeTab === "My Recipes" && (
-              <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {myRecipes.length > 0 ? (
                   myRecipes.map((recipe) => (
                     <div
                       key={recipe._id}
-                      className="mb-4 p-4 border rounded-lg shadow-sm"
+                      className="relative p-4 border rounded-lg shadow-sm flex flex-col"
                     >
-                      <h3 className="text-lg font-semibold text-gray-800">
+                      <div className="relative h-48 w-full mb-4">
+                        <img
+                          src={`${backendUrl}${recipe.recipeImage}`}
+                          alt={recipe.title}
+                          className="h-full w-full rounded-lg object-cover"
+                        />
+                        <div className="absolute top-2 right-2 flex space-x-2">
+                          <button
+                            onClick={() => handleUpdateRecipe(recipe._id)}
+                            className="text-blue-500 hover:text-blue-700 transition-colors duration-200"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path d="M17.414 2.586a2 2 0 00-2.828 0l-10 10V17h4.414l10-10a2 2 0 000-2.828l-1.586-1.586z" />
+                              <path
+                                fillRule="evenodd"
+                                d="M12.293 7.293a1 1 0 011.414 0l1.414 1.414a1 1 0 010 1.414l-1.414 1.414-2.828-2.828 1.414-1.414zM7.707 13.707a1 1 0 000-1.414L6.293 11a1 1 0 00-1.414 0L3.465 12.414a1 1 0 000 1.414l1.414 1.414a1 1 0 001.414 0l1.414-1.414z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteRecipe(recipe._id)}
+                            className="text-red-500 hover:text-red-700 transition-colors duration-200"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M5 8h10v7a2 2 0 01-2 2H7a2 2 0 01-2-2V8zm4 0v7H7V8h2zm4 0v7h-2V8h2zm1-5a1 1 0 011 1v1H4V4a1 1 0 011-1h8zM9 3h2v1H9V3z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">
                         {recipe.title}
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 flex-grow">
                         {recipe.description}
                       </p>
-                      {/* Add more recipe details as needed */}
                     </div>
                   ))
                 ) : (
@@ -304,17 +364,29 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                 )}
               </div>
             )}
+
             {activeTab === "Liked" && (
-              <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {likedRecipes.length > 0 ? (
                   likedRecipes.map((recipe) => (
                     <div
                       key={recipe.recipeId}
-                      className="mb-4 p-4 border rounded-lg shadow-sm"
+                      className="p-4 border rounded-lg shadow-sm"
                     >
+                      <div className="relative h-48 w-full mb-4">
+                        <img
+                          src={`${backendUrl}${recipe.recipeId.recipeImage}`}
+                          alt={recipe.recipeId.title}
+                          className="h-full w-full rounded-lg object-cover"
+                        />
+                      </div>
+
                       <h3 className="text-lg font-semibold text-gray-800">
-                        {recipe.title}
+                        {recipe.recipeId.title}
                       </h3>
+                      <p className="text-sm text-gray-600 flex-grow">
+                        {recipe.recipeId.description}
+                      </p>
                       {/* Add more recipe details as needed */}
                     </div>
                   ))
@@ -323,17 +395,29 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                 )}
               </div>
             )}
+
             {activeTab === "Saved" && (
-              <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {savedRecipes.length > 0 ? (
                   savedRecipes.map((recipe) => (
                     <div
-                      key={recipe._id}
-                      className="mb-4 p-4 border rounded-lg shadow-sm"
+                      key={recipe.recipeId}
+                      className="p-4 border rounded-lg shadow-sm"
                     >
+                      <div className="relative h-48 w-full mb-4">
+                        <img
+                          src={`${backendUrl}${recipe.recipeId.recipeImage}`}
+                          alt={recipe.recipeId.title}
+                          className="h-full w-full rounded-lg object-cover"
+                        />
+                      </div>
+
                       <h3 className="text-lg font-semibold text-gray-800">
                         {recipe.recipeId.title}
                       </h3>
+                      <p className="text-sm text-gray-600 flex-grow">
+                        {recipe.recipeId.description}
+                      </p>
                       {/* Add more recipe details as needed */}
                     </div>
                   ))
