@@ -3,31 +3,16 @@ const mongoose = require("mongoose");
 
 // get all saved recipes
 exports.getSavedRecipes = async (req, res) => {
-  // const { id } = req.params;
-  // if (!id) return res.status(400).json({ message: "Recipe id is required" });
-  // if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ message: "Invalid recipe id" });
+   const { id } = req.params;
+   if (!id) return res.status(400).json({ message: "Recipe id is required" });
+   if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ message: "Invalid recipe id" });
 
-  // try {
-  //   const savedRecipes = await SavedRecipe.find({ userId: id })
-  //     .populate({
-  //       path: "recipeId",
-  //       select: "title recipeImage createdBy reviwe", 
-  //       populate: [
-  //         {
-  //           path: "createdBy",
-  //           select: "name profileImage", 
-  //         },
-  //         {
-  //           path: "reviwe", 
-  //           select: "rating", 
-  //         },
-  //       ],
-  //     })
-  //     .exec();
-  //   res.status(200).json(recipesWithAvgRating);
-  // } catch (error) {
-  //   res.status(500).json({ message: error.message });
-  // }
+   try {
+     const savedRecipes = await SavedRecipe.find({ userId: id })
+     res.status(200).json(savedRecipes);
+   } catch (error) {
+    res.status(500).json({ message: error.message });
+   }
 };
 
 // Toggle saved recipe: add if not saved, delete if already saved

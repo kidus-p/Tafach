@@ -16,6 +16,7 @@ app.use("/api/recipe", require("./routes/recipeRoutes"));
 app.use("/api/category", require("./routes/categoryRoutes"));
 app.use('/api/review', require('./routes/reviewRoutes'));
 app.use('/api/savedRecipe', require('./routes/savedRecipeRoutes'));
+app.use('/api/like', require('./routes/likeRoutes'));
 
 // static file
 app.use('/recipeImage', express.static('./recipeImage'));
