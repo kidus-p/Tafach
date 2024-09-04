@@ -37,7 +37,6 @@ const colorPalette = [
   { backgroundColor: '#B0C4DE', textColor: '#2F4F4F', borderColor: '#2F4F4F' }, // LightSteelBlue with DarkSlateGray
   { backgroundColor: '#D3D3D3', textColor: '#696969', borderColor: '#696969' }  // LightGray with DimGray
 ];
-
 function CategoryItem({ name, backgroundColor, color, onClick, isSelected }) {
   return (
     <a
@@ -57,24 +56,34 @@ function CategoryItem({ name, backgroundColor, color, onClick, isSelected }) {
   );
 }
 
-function CategoryList({ categories, onCategorySelect, selectedCategories }) {
+function CategoryList({ categories, onCategorySelect, selectedCategories, onClearAll }) {
   const getCategoryColors = (index) => colorPalette[index % colorPalette.length];
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-6 mt-8">
-      {categories.map((category, index) => {
-        const { backgroundColor, textColor } = getCategoryColors(index);
-        return (
-          <CategoryItem
-            key={category._id}
-            name={category.name}
-            backgroundColor={backgroundColor}
-            color={textColor}
-            onClick={() => onCategorySelect(category._id)}
-            isSelected={selectedCategories.includes(category._id)}
-          />
-        );
-      })}
+    <div className="flex flex-col items-center justify-center gap-6 mt-8">
+      <div className="flex flex-wrap items-center justify-center gap-6">
+        {categories.map((category, index) => {
+          const { backgroundColor, textColor } = getCategoryColors(index);
+          return (
+            <CategoryItem
+              key={category._id}
+              name={category.name}
+              backgroundColor={backgroundColor}
+              color={textColor}
+              onClick={() => onCategorySelect(category._id)}
+              isSelected={selectedCategories.includes(category._id)}
+            />
+          );
+        })}
+      </div>
+      {selectedCategories.length > 0 && (
+        <button
+          onClick={onClearAll}
+          className="mt-4 px-6 py-4 rounded-full bg-red-800 text-white font-semibold text-lg shadow-md transition-transform transform hover:scale-105"
+        >
+          Clear All Selected Categories
+        </button>
+      )}
     </div>
   );
 }
@@ -151,6 +160,11 @@ const RecipeSection = () => {
     filterRecipes(searchTerm, updatedCategories);
   };
 
+  const handleClearAllCategories = () => {
+    setSelectedCategories([]);
+    filterRecipes(searchTerm, []);
+  };
+
   const displayedRecipes = showAll ? filteredRecipes : filteredRecipes.slice(0, 4);
 
   return (
@@ -176,6 +190,7 @@ const RecipeSection = () => {
           categories={categories}
           onCategorySelect={handleCategorySelect}
           selectedCategories={selectedCategories}
+          onClearAll={handleClearAllCategories}
         />
       </div>
       {loading ? (
@@ -195,13 +210,12 @@ const RecipeSection = () => {
       )}
       {filteredRecipes.length > 4 && (
         <button
-          className="mt-12 mb-12 px-8 py-3 rounded  text-yellow-800 font-semibold border border-yellow-600 shadow-lg transition-transform transform hover:scale-110 hover:shadow-2xl hover:brightness-75"
+          className="mt-12 mb-12 px-8 py-3 rounded text-yellow-800 font-semibold border border-yellow-600 shadow-lg transition-transform transform hover:scale-110 hover:shadow-2xl hover:brightness-75"
           onClick={() => setShowAll(!showAll)}
         >
           {showAll ? 'View Less' : 'View More'}
         </button>
       )}
-      {/* Add the HighlightedSection here */}
       <HighlightedSection />
     </div>
   );

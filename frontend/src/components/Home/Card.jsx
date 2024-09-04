@@ -13,6 +13,7 @@ const Card = ({ recipe }) => {
   const [averageRating, setAverageRating] = useState(null);
   const [ratingCount, setRatingCount] = useState(0);
   const [savedRecipes, setSavedRecipes] = useState([]);
+  const [personsWhoLiked, setPersonsWhoLiked] = useState([]);
   const [likeCount, setLikeCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -172,83 +173,72 @@ const Card = ({ recipe }) => {
 
   return (
     <div
-      className="bg-white shadow-md hover:shadow-lg transition-transform transform hover:scale-105 rounded-lg overflow-hidden relative cursor-pointer"
+      className="bg-white shadow-sm rounded-lg overflow-hidden relative mb-5 cursor-pointer max-w-[600px] mx-auto hover:shadow-"
       onClick={handleCardClick}
     >
+      {/* Image Section */}
       <img
         src={recipeImageUrl}
         alt={recipe.title}
-        className="w-full h-48 object-cover rounded-t-lg"
+        className="w-full h-64 object-cover"
       />
-      <button
-          className={`p-2 rounded-full shadow-md ${
-            isSaved ? "text-[#22c55e]" : "text-gray-600"
-          }`}
+
+      {/* Header with Profile */}
+      <div className="flex items-center p-4 border-b border-gray-200">
+        <img
+          src={profileImageUrl}
+          alt={recipe.createdBy.name}
+          className="w-10 h-10 rounded-full border border-gray-300"
+        />
+        <div className="ml-3">
+          <p className="font-semibold text-sm">{recipe.createdBy.name}</p>
+          <p className="text-xs text-gray-500">{recipe.createdBy.username}</p>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-between items-center p-4">
+        <div className="flex space-x-4">
+          <button
+            className={`text-xl ${isLiked ? "text-red-500" : "text-gray-700"}`}
+            onClick={toggleLike}
+          >
+            {isLiked ? <AiFillHeart /> : <AiOutlineHeart />}
+          </button>
+          <span className="text-sm text-gray-500">{likeCount} likes</span>
+        </div>
+        <button
+          className={`text-xl ${isSaved ? "text-[#22c55e]" : "text-gray-700"}`}
           onClick={handleSaveClick}
         >
-          {isSaved ? <RiBookmarkFill className="w-6 h-6" /> : <RiBookmarkLine className="w-6 h-6" />}
-        </button>
-      <div className="flex justify-between items-center p-4">
-        <div className="flex items-center">
-          <img
-            src={profileImageUrl}
-            alt={recipe.createdBy.name}
-            className="w-14 h-14 rounded-full mr-4 object-cover border-2 border-gray-300"
-          />
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">{recipe.title}</h2>
-            <p className="text-sm text-gray-600">{recipe.createdBy.name}</p>
-          </div>
-        </div>
-
-        <button
-          className={`p-2 rounded-full shadow-md ${
-            isLiked ? "text-red-500" : "text-gray-600"
-          }`}
-          onClick={toggleLike}
-          style={{
-            backgroundColor: "rgba(255, 255, 255, 0.8)",
-            boxShadow: isLiked
-              ? "0 0 10px 5px rgba(255, 0, 0, 0.5)"
-              : "0 0 5px 2px rgba(0, 0, 0, 0.1)",
-            transform: isLiked ? "scale(1.2)" : "scale(1)",
-            transition: "transform 0.3s, box-shadow 0.3s",
-          }}
-        >
-          {isLiked ? (
-            <AiFillHeart className="w-6 h-6" />
-          ) : (
-            <AiOutlineHeart className="w-6 h-6" />
-          )}
-          <span className="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs p-1">
-            {likeCount}
-          </span>
+          {isSaved ? <RiBookmarkFill /> : <RiBookmarkLine />}
         </button>
       </div>
 
-      <div className="p-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2 text-gray-600">
+      {/* Recipe Info */}
+      <div className="px-4 pb-4">
+        <h2 className="font-semibold text-lg">{recipe.title}</h2>
+        <div className="flex items-center space-x-2 text-gray-600 mt-2">
           <PiTimer className="text-xl" />
           <span>{recipe.cookingTime} min</span>
         </div>
-        
-      <div className="absolute bottom-5 right-2 flex items-center space-x-2">
-        {averageRating !== null ? (
-          <div className="flex items-center text-yellow-500">
-            {renderStars(parseFloat(averageRating))}
-          </div>
-        ) : (
-          <div className="flex items-center text-gray-500">
-            <FaStar className="w-5 h-5" />
-            <span className="text-gray-600 text-xs">Not rated yet</span>
-          </div>
-        )}
-        {ratingCount > 0 && (
-          <span className="text-gray-600 text-xs">
-            {averageRating} ({ratingCount})
-          </span>
-        )}
-      </div>
+        <div className="flex items-center mt-2">
+          {averageRating !== null ? (
+            <div className="flex items-center text-yellow-500">
+              {renderStars(parseFloat(averageRating))}
+            </div>
+          ) : (
+            <div className="flex items-center text-gray-500">
+              <FaStar className="w-5 h-5" />
+              <span className="text-gray-600 text-xs">Not rated yet</span>
+            </div>
+          )}
+          {ratingCount > 0 && (
+            <span className="ml-2 text-sm text-gray-500">
+              ({ratingCount} review{ratingCount > 1 ? "s" : ""})
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

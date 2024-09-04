@@ -9,7 +9,7 @@ exports.getAllReviews = async (req, res) => {
 
     try {
         const reviews = await Review.find({ recipeId: id })
-            .populate("userId", "name email profileImage") // Ensure this matches your Review schema field
+            .populate("userId", "name email profileImage") 
             .exec();
         res.status(200).json(reviews);
     } catch (error) {

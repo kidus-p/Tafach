@@ -103,7 +103,8 @@ exports.getLikedRecipesByUser = async (req, res) => {
     const likedRecipes = likes.map(like => ({
       recipeId: like.recipeId._id,
       title: like.recipeId.title,
-      // Include other recipe details if needed
+      description: like.recipeId.description,
+      image: like.recipeId.recipeImage,
     }));
 
     res.status(200).json(likedRecipes);

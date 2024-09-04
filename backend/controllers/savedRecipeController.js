@@ -8,7 +8,8 @@ exports.getSavedRecipes = async (req, res) => {
    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ message: "Invalid recipe id" });
 
    try {
-     const savedRecipes = await SavedRecipe.find({ userId: id })
+     const savedRecipes = await SavedRecipe.find({ userId: id }).populate("recipeId" , "title description recipeImage") 
+     .exec();;
      res.status(200).json(savedRecipes);
    } catch (error) {
     res.status(500).json({ message: error.message });

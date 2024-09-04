@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { FaClock, FaStar, FaUserCircle } from 'react-icons/fa';
 import format from 'date-fns/format';
 import { differenceInHours } from 'date-fns';
+import Navbar from '../components/Home/Nav';
 
 const RecipeDetails = () => {
   const { id } = useParams();
@@ -95,7 +96,9 @@ const RecipeDetails = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen py-12 px-6">
+     <>
+  <Navbar />
+<div className="bg-gray-100 min-h-screen py-12 px-6">
       {recipe ? (
         <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
           {/* Recipe Image */}
@@ -232,6 +235,8 @@ const RecipeDetails = () => {
         </div>
       )}
     </div>
+     </>
+    
   );
 };
 
