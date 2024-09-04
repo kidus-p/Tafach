@@ -180,14 +180,65 @@ const Card = ({ recipe }) => {
         alt={recipe.title}
         className="w-full h-48 object-cover rounded-t-lg"
       />
+      <button
+          className={`p-2 rounded-full shadow-md ${
+            isSaved ? "text-green-600" : "text-gray-600"
+          }`}
+          onClick={handleSaveClick}
+        >
+          {isSaved ? <RiBookmarkFill className="w-6 h-6" /> : <RiBookmarkLine className="w-6 h-6" />}
+        </button>
+      <div className="flex justify-between items-center p-4">
+        <div className="flex items-center">
+          <img
+            src={profileImageUrl}
+            alt={recipe.createdBy.name}
+            className="w-14 h-14 rounded-full mr-4 object-cover border-2 border-gray-300"
+          />
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">{recipe.title}</h2>
+            <p className="text-sm text-gray-600">{recipe.createdBy.name}</p>
+          </div>
+        </div>
 
-      <div className="absolute bottom-9 right-2 flex items-center">
+        <button
+          className={`p-2 rounded-full shadow-md ${
+            isLiked ? "text-red-500" : "text-gray-600"
+          }`}
+          onClick={toggleLike}
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            boxShadow: isLiked
+              ? "0 0 10px 5px rgba(255, 0, 0, 0.5)"
+              : "0 0 5px 2px rgba(0, 0, 0, 0.1)",
+            transform: isLiked ? "scale(1.2)" : "scale(1)",
+            transition: "transform 0.3s, box-shadow 0.3s",
+          }}
+        >
+          {isLiked ? (
+            <AiFillHeart className="w-6 h-6" />
+          ) : (
+            <AiOutlineHeart className="w-6 h-6" />
+          )}
+          <span className="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs p-1">
+            {likeCount}
+          </span>
+        </button>
+      </div>
+
+      <div className="p-4 flex justify-between items-center">
+        <div className="flex items-center space-x-2 text-gray-600">
+          <PiTimer className="text-xl" />
+          <span>{recipe.cookingTime} min</span>
+        </div>
+        
+      <div className="absolute bottom-5 right-2 flex items-center space-x-2">
         {averageRating !== null ? (
-          <div className="flex items-center text-yellow-500 mr-2">
+          <div className="flex items-center text-yellow-500">
             {renderStars(parseFloat(averageRating))}
           </div>
         ) : (
-          <div className="flex items-center text-gray-500 mr-2">
+          <div className="flex items-center text-gray-500">
             <FaStar className="w-5 h-5" />
             <span className="text-gray-600 text-xs">Not rated yet</span>
           </div>
@@ -198,65 +249,6 @@ const Card = ({ recipe }) => {
           </span>
         )}
       </div>
-
-      <button
-        className={`absolute top-2 right-2 p-2 rounded-full shadow-md ${
-          isLiked ? "text-red-500" : "text-gray-600"
-        }`}
-        onClick={toggleLike}
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          boxShadow: isLiked
-            ? "0 0 10px 5px rgba(255, 0, 0, 0.5)"
-            : "0 0 5px 2px rgba(0, 0, 0, 0.1)",
-          transform: isLiked ? "scale(1.2)" : "scale(1)",
-          transition: "transform 0.3s, box-shadow 0.3s",
-        }}
-      >
-        {isLiked ? (
-          <AiFillHeart className="w-6 h-6" />
-        ) : (
-          <AiOutlineHeart className="w-6 h-6" />
-        )}
-        <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-2 py-1">
-          {likeCount}
-        </span>
-      </button>
-
-      <button
-        className={`absolute top-2 left-2 p-2 rounded-full shadow-md ${
-          isSaved ? "text-yellow-500" : "text-gray-600"
-        }`}
-        onClick={handleSaveClick}
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          boxShadow: isSaved
-            ? "0 0 10px 5px rgba(255, 215, 0, 0.5)"
-            : "0 0 5px 2px rgba(0, 0, 0, 0.1)",
-          transform: isSaved ? "scale(1.2)" : "scale(1)",
-        }}
-      >
-        {isSaved ? (
-          <RiBookmarkFill className="w-6 h-6" />
-        ) : (
-          <RiBookmarkLine className="w-6 h-6" />
-        )}
-      </button>
-
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-2">{recipe.title}</h3>
-        <div className="flex items-center mb-2">
-          <img
-            src={profileImageUrl}
-            alt={recipe.createdBy.name}
-            className="w-8 h-8 rounded-full mr-2"
-          />
-          <span className="text-gray-700">{recipe.createdBy.name}</span>
-        </div>
-        <div className="flex items-center text-gray-600 mb-2">
-          <PiTimer className="mr-2" />
-          <span>{recipe.cookingTime} mins</span>
-        </div>
       </div>
     </div>
   );
