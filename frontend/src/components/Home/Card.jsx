@@ -182,7 +182,7 @@ const Card = ({ recipe }) => {
       />
       <button
           className={`p-2 rounded-full shadow-md ${
-            isSaved ? "text-green-600" : "text-gray-600"
+            isSaved ? "text-yellow-600" : "text-gray-600"
           }`}
           onClick={handleSaveClick}
         >
