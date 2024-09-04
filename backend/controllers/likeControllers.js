@@ -37,7 +37,9 @@ exports.addLike = async (req, res) => {
       res.status(201).json({ message: "Like added" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Error adding/removing like", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error adding/removing like", error: error.message });
   }
 };
 
@@ -60,7 +62,9 @@ exports.getLikeCount = async (req, res) => {
     const totalLikes = result.length > 0 ? result[0].totalLikes : 0;
     res.status(200).json({ totalLikes });
   } catch (error) {
-    res.status(500).json({ message: "Error counting likes", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error counting likes", error: error.message });
   }
 };
 
@@ -78,13 +82,15 @@ exports.getLikers = async (req, res) => {
     const likers = await Like.find({ recipeId }).populate("likedBy", "name");
 
     // Extract the liker details
-    const likersDetails = likers.map(like => ({
+    const likersDetails = likers.map((like) => ({
       likedBy: like.likedBy,
     }));
 
     res.status(200).json({ likers: likersDetails });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching likers", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching likers", error: error.message });
   }
 };
 
@@ -99,16 +105,21 @@ exports.getLikedRecipesByUser = async (req, res) => {
 
   try {
     // Find liked recipes by user and populate recipe details
-    const likes = await Like.find({ likedBy: userId }).populate("recipeId");
-    const likedRecipes = likes.map(like => ({
-      recipeId: like.recipeId._id,
-      title: like.recipeId.title,
-      description: like.recipeId.description,
-      image: like.recipeId.recipeImage,
-    }));
+    const likes = await Like.find({ likedBy: userId }).populate(
+      "recipeId",
+      "title description recipeImage"
+    );
+    // const likedRecipes = likes.map(like => ({
+    //   recipeId: like.recipeId._id,
+    //   title: like.recipeId.title,
+    //   description: like.recipeId.description,
+    //   image: like.recipeId.recipeImage,
+    // }));
 
-    res.status(200).json(likedRecipes);
+    res.status(200).json(likes);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching liked recipes", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching liked recipes", error: error.message });
   }
 };
