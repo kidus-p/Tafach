@@ -13,12 +13,14 @@ const Card = ({ recipe }) => {
   const [averageRating, setAverageRating] = useState(null);
   const [ratingCount, setRatingCount] = useState(0);
   const [savedRecipes, setSavedRecipes] = useState([]);
+  const [personsWhoLiked, setPersonsWhoLiked] = useState([]);
   const [likeCount, setLikeCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:7070";
   const recipeImageUrl = `${backendUrl}${recipe.recipeImage}`;
   const profileImageUrl = `${backendUrl}${recipe.createdBy.profileImage}`;
+  const [likedRecipes, setLikedRecipes] = useState([]);
 
   const handleCardClick = () => {
     navigate(`/recipe/${recipe._id}`);
@@ -41,7 +43,8 @@ const Card = ({ recipe }) => {
       try {
         const response = await axios.get(`${backendUrl}/api/like/likedrecipes/${user._id}`);
         const liked = response.data || [];
-        const isCurrentlyLiked = liked.some((likedRecipe) => likedRecipe.recipeId._id === recipe._id);
+        setLikedRecipes(liked);
+        const isCurrentlyLiked = liked.some((likedRecipe) => likedRecipe.recipeId === recipe._id);
         setIsLiked(isCurrentlyLiked);
       } catch (error) {
         console.error("Error fetching liked recipes:", error);
@@ -53,7 +56,8 @@ const Card = ({ recipe }) => {
       try {
         const response = await axios.get(`${backendUrl}/api/savedRecipe/getsavedrecipe/${user._id}`);
         const saved = response.data || [];
-        const isCurrentlySaved = saved.some((savedRecipe) => savedRecipe.recipeId._id === recipe._id);
+        setSavedRecipes(saved);
+        const isCurrentlySaved = saved.some((savedRecipe) => savedRecipe.recipeId === recipe._id);
         setIsSaved(isCurrentlySaved);
       } catch (error) {
         console.error("Error fetching saved recipes:", error);
@@ -122,10 +126,10 @@ const Card = ({ recipe }) => {
 
       if (response.status === 201) {
         setIsLiked(true);
-        setLikeCount((prevCount) => prevCount + 1);
+        setLikeCount(likeCount + 1);
       } else if (response.status === 200) {
         setIsLiked(false);
-        setLikeCount((prevCount) => prevCount - 1);
+        setLikeCount(likeCount - 1);
       }
     } catch (error) {
       console.error("Error toggling like:", error);
@@ -226,10 +230,14 @@ const Card = ({ recipe }) => {
           ) : (
             <div className="flex items-center text-gray-500">
               <FaStar className="w-5 h-5" />
-              <span className="ml-2">No reviews yet</span>
+              <span className="text-gray-600 text-xs">Not rated yet</span>
             </div>
           )}
-          <span className="ml-2 text-sm text-gray-600">({ratingCount} reviews)</span>
+          {ratingCount > 0 && (
+            <span className="ml-2 text-sm text-gray-500">
+              ({ratingCount} review{ratingCount > 1 ? "s" : ""})
+            </span>
+          )}
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 const express = require("express");
 const route = express.Router();
-const { toggleSavedRecipe, getSavedRecipes , deletRecipe  } = require("../controllers/savedRecipeController");
+const { toggleSavedRecipe, getSavedRecipes } = require("../controllers/savedRecipeController");
 
 
 
@@ -12,7 +12,6 @@ route.post("/addsavedrecipe", toggleSavedRecipe);
 route.get("/getsavedrecipe/:id", getSavedRecipes);
 
 
-// Delete saved recipe
-route.delete("/deletesavedrecipe/:id", deletRecipe);
+
 
 module.exports = route;
