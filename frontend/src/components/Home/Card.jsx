@@ -13,7 +13,6 @@ const Card = ({ recipe }) => {
   const [averageRating, setAverageRating] = useState(null);
   const [ratingCount, setRatingCount] = useState(0);
   const [savedRecipes, setSavedRecipes] = useState([]);
-  const [personsWhoLiked, setPersonsWhoLiked] = useState([]);
   const [likeCount, setLikeCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -44,8 +43,9 @@ const Card = ({ recipe }) => {
         const response = await axios.get(`${backendUrl}/api/like/likedrecipes/${user._id}`);
         const liked = response.data || [];
         setLikedRecipes(liked);
-        const isCurrentlyLiked = liked.some((likedRecipe) => likedRecipe.recipeId === recipe._id);
+        const isCurrentlyLiked = liked.some((likedRecipe) => likedRecipe.recipeId._id === recipe._id);
         setIsLiked(isCurrentlyLiked);
+        console.log(liked);
       } catch (error) {
         console.error("Error fetching liked recipes:", error);
       }
@@ -57,7 +57,7 @@ const Card = ({ recipe }) => {
         const response = await axios.get(`${backendUrl}/api/savedRecipe/getsavedrecipe/${user._id}`);
         const saved = response.data || [];
         setSavedRecipes(saved);
-        const isCurrentlySaved = saved.some((savedRecipe) => savedRecipe.recipeId === recipe._id);
+        const isCurrentlySaved = saved.some((savedRecipe) => savedRecipe.recipeId._id === recipe._id);
         setIsSaved(isCurrentlySaved);
       } catch (error) {
         console.error("Error fetching saved recipes:", error);

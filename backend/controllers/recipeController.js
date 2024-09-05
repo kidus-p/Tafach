@@ -172,9 +172,10 @@ exports.updateRecipe = async (req, res) => {
 };
 
 // Delete a recipe
+// Delete a recipe in recipeController.js
 exports.deleteRecipe = async (req, res) => {
   const { recipeId } = req.params;
-  console.log(recipeId);
+
   if (!recipeId) {
     return res.status(400).json({ message: "Recipe ID is required" });
   }
@@ -184,19 +185,23 @@ exports.deleteRecipe = async (req, res) => {
   }
 
   try {
+    // Manually delete associated likes and saved recipes
+    await mongoose.model("Like").deleteMany({ recipeId });
+    await mongoose.model("SavedRecipe").deleteMany({ recipeId });
+
+    // Delete the recipe itself
     const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
+
     if (!deletedRecipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    res.status(200).json({ message: "Recipe deleted successfully" });
+    res.status(200).json({ message: "Recipe and associated references deleted successfully" });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error deleting the recipe", error: error.message });
-    c;
+    res.status(500).json({ message: "Error deleting the recipe", error: error.message });
   }
 };
+
 
 // get a user recipe
 exports.getUserRecipes = async (req, res) => {
