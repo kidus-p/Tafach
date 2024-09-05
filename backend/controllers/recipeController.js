@@ -30,7 +30,7 @@ exports.addRecipe = async (req, res) => {
     }
 
     // Log the received file information for debugging
-    console.log('Received file:', req.file);
+    console.log("Received file:", req.file);
 
     // Create a new recipe
     const newRecipe = new Recipe({
@@ -49,7 +49,7 @@ exports.addRecipe = async (req, res) => {
     await newRecipe.save();
     res.status(201).json(newRecipe);
   } catch (error) {
-    console.error("Error adding recipe:", error);  // Enhanced error logging
+    console.error("Error adding recipe:", error); // Enhanced error logging
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -89,21 +89,24 @@ exports.getRecipe = async (req, res) => {
 
     res.status(200).json(recipe);
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving the recipe", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving the recipe", error: error.message });
   }
 };
 
-
+// Update a recipe
 // Update a recipe
 exports.updateRecipe = async (req, res) => {
   const { id } = req.params;
-  if(!id) {
+  if (!id) {
     return res.status(400).json({ message: "Recipe ID is required" });
   }
 
-  if(!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid recipe ID" });
   }
+
   try {
     const {
       title,
@@ -129,72 +132,88 @@ exports.updateRecipe = async (req, res) => {
     ) {
       return res.status(400).json({ message: "All fields are required." });
     }
-     // Log the received file information for debugging
-     console.log('Received file:', req.file);
 
-     // Create a new recipe
-     const newRecipe = new Recipe({
-       title,
-       description,
-       cookingTime,
-       serving,
-       ingredients: JSON.parse(ingredients),
-       instructions: JSON.parse(instructions),
-       categories: JSON.parse(categories),
-       createdBy,
-       recipeImage: req.file ? `/recipeImage/${req.file.filename}` : "",
-     });
-     // Save to the database
-     await newRecipe.save();
-     res.status(201).json(newRecipe);
-    
+    // Log the received file information for debugging
+    console.log("Received file:", req.file);
+
+    // Prepare the updated recipe data
+    const updatedRecipeData = {
+      title,
+      description,
+      cookingTime,
+      serving,
+      ingredients: JSON.parse(ingredients),
+      instructions: JSON.parse(instructions),
+      categories: JSON.parse(categories),
+      createdBy,
+      recipeImage: req.file ? `/recipeImage/${req.file.filename}` : "",
+    };
+
+    // Update the recipe in the database
+    const updatedRecipe = await Recipe.findByIdAndUpdate(
+      id,
+      updatedRecipeData,
+      {
+        new: true, // Return the updated recipe
+        runValidators: true, // Run validation for updated data
+      }
+    );
+
+    if (!updatedRecipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+
+    res.status(200).json(updatedRecipe);
   } catch (error) {
-    res.status(500).json({ message: "Error updating the recipe", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error updating the recipe", error: error.message });
   }
-}
-
+};
 
 // Delete a recipe
 exports.deleteRecipe = async (req, res) => {
-  const { recipeId } = req.params; 
-  console.log(recipeId); 
-  if(!recipeId) {
+  const { recipeId } = req.params;
+  console.log(recipeId);
+  if (!recipeId) {
     return res.status(400).json({ message: "Recipe ID is required" });
   }
 
-  if(!mongoose.Types.ObjectId.isValid(recipeId)) {
+  if (!mongoose.Types.ObjectId.isValid(recipeId)) {
     return res.status(400).json({ message: "Invalid recipe ID" });
   }
 
   try {
     const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
-    if(!deletedRecipe) {
+    if (!deletedRecipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
     res.status(200).json({ message: "Recipe deleted successfully" });
-
   } catch (error) {
-    res.status(500).json({ message: "Error deleting the recipe", error: error.message });c
+    res
+      .status(500)
+      .json({ message: "Error deleting the recipe", error: error.message });
+    c;
   }
-}
-
-
+};
 
 // get a user recipe
-exports.getUserRecipes = async (req , res ) => {
+exports.getUserRecipes = async (req, res) => {
   const { userId } = req.params;
-  if(!userId) {
+  if (!userId) {
     return res.status(400).json({ message: "User ID is required" });
   }
 
-  if(!mongoose.Types.ObjectId.isValid(userId)) {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ message: "Invalid user ID" });
   }
   try {
     const recipes = await Recipe.find({ createdBy: userId });
     res.status(200).json(recipes);
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving user recipes", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving user recipes", error: error.message });
   }
-}
+};

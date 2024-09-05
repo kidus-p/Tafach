@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
   const backendUrl =
     import.meta.env.VITE_BACKEND_URL || "http://localhost:7070";
   const token = JSON.parse(localStorage.getItem("user"))?.accessToken;
-
+  const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState(user.profileImage || "");
   const [bio, setBio] = useState(user.bio || "");
   const [name, setName] = useState(user.name || "");
@@ -191,7 +192,11 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
 
   const handleUpdateRecipe = (recipeId) => {
     // Redirect to the update recipe page or open a modal for updating
-    console.log("Update recipe:", recipeId);
+    navigate(`/update-recipe/${recipeId}`);
+  };
+
+  const handleCardClick = (id) => {
+    navigate(`/recipe/${id}`);
   };
 
   return (
@@ -298,131 +303,149 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
           </div>
 
           {/* Content Section Based on Tab */}
-          <div className="flex-grow p-4 bg-white overflow-y-auto">
+          <div className="flex-grow p-8 bg-gray-50 overflow-y-auto">
             {activeTab === "My Recipes" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {myRecipes.length > 0 ? (
                   myRecipes.map((recipe) => (
                     <div
                       key={recipe._id}
-                      className="relative p-4 border rounded-lg shadow-sm flex flex-col"
+                      className="group relative border rounded-lg shadow-md bg-white overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+                      onClick={() => handleCardClick(recipe._id)}
                     >
-                      <div className="relative h-48 w-full mb-4">
+                      <div className="relative h-40 w-full overflow-hidden rounded-t-lg">
                         <img
                           src={`${backendUrl}${recipe.recipeImage}`}
                           alt={recipe.title}
-                          className="h-full w-full rounded-lg object-cover"
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                         />
-                        <div className="absolute top-2 right-2 flex space-x-2">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+                        <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                           <button
-                            onClick={() => handleUpdateRecipe(recipe._id)}
-                            className="text-blue-500 hover:text-blue-700 transition-colors duration-200"
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevents card click
+                              handleUpdateRecipe(recipe._id);
+                            }}
+                            className="bg-white p-2 rounded-full shadow-md text-green-600 hover:bg-green-100 transition-colors duration-200"
+                            title="Edit Recipe"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
+                              className="h-4 w-4"
                               viewBox="0 0 20 20"
                               fill="currentColor"
                             >
                               <path d="M17.414 2.586a2 2 0 00-2.828 0l-10 10V17h4.414l10-10a2 2 0 000-2.828l-1.586-1.586z" />
-                              <path
-                                fillRule="evenodd"
-                                d="M12.293 7.293a1 1 0 011.414 0l1.414 1.414a1 1 0 010 1.414l-1.414 1.414-2.828-2.828 1.414-1.414zM7.707 13.707a1 1 0 000-1.414L6.293 11a1 1 0 00-1.414 0L3.465 12.414a1 1 0 000 1.414l1.414 1.414a1 1 0 001.414 0l1.414-1.414z"
-                                clipRule="evenodd"
-                              />
+                              <path d="M12.293 7.293a1 1 0 011.414 0l1.414 1.414a1 1 0 010 1.414l-1.414 1.414-2.828-2.828 1.414-1.414z" />
                             </svg>
                           </button>
                           <button
-                            onClick={() => handleDeleteRecipe(recipe._id)}
-                            className="text-red-500 hover:text-red-700 transition-colors duration-200"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteRecipe(recipe._id);
+                            }}
+                            className="bg-white p-2 rounded-full shadow-md text-red-600 hover:bg-red-100 transition-colors duration-200"
+                            title="Delete Recipe"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
+                              className="h-4 w-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
                             >
                               <path
-                                fillRule="evenodd"
-                                d="M5 8h10v7a2 2 0 01-2 2H7a2 2 0 01-2-2V8zm4 0v7H7V8h2zm4 0v7h-2V8h2zm1-5a1 1 0 011 1v1H4V4a1 1 0 011-1h8zM9 3h2v1H9V3z"
-                                clipRule="evenodd"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M3 6h18M9 6v12m6-12v12M5 6l1-4h12l1 4"
                               />
                             </svg>
                           </button>
                         </div>
                       </div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                        {recipe.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 flex-grow">
-                        {recipe.description}
-                      </p>
+                      <div className="p-4">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1 truncate">
+                          {recipe.title}
+                        </h3>
+                        <p className="text-sm text-gray-700 line-clamp-2">
+                          {recipe.description}
+                        </p>
+                      </div>
                     </div>
                   ))
                 ) : (
-                  <p>No recipes found.</p>
+                  <p className="text-center text-gray-500">No recipes found.</p>
                 )}
               </div>
             )}
 
             {activeTab === "Liked" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {likedRecipes.length > 0 ? (
                   likedRecipes.map((recipe) => (
                     <div
-                      key={recipe.recipeId}
-                      className="p-4 border rounded-lg shadow-sm"
+                      key={recipe.recipeId._id}
+                      className="group relative border rounded-lg shadow-md bg-white overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+                      onClick={() => handleCardClick(recipe.recipeId._id)}
                     >
-                      <div className="relative h-48 w-full mb-4">
+                      <div className="relative h-40 w-full overflow-hidden rounded-t-lg">
                         <img
                           src={`${backendUrl}${recipe.recipeId.recipeImage}`}
                           alt={recipe.recipeId.title}
-                          className="h-full w-full rounded-lg object-cover"
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
                       </div>
-
-                      <h3 className="text-lg font-semibold text-gray-800">
-                        {recipe.recipeId.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 flex-grow">
-                        {recipe.recipeId.description}
-                      </p>
-                      {/* Add more recipe details as needed */}
+                      <div className="p-4">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1 truncate">
+                          {recipe.recipeId.title}
+                        </h3>
+                        <p className="text-sm text-gray-700 line-clamp-2">
+                          {recipe.recipeId.description}
+                        </p>
+                      </div>
                     </div>
                   ))
                 ) : (
-                  <p>No liked recipes found.</p>
+                  <p className="text-center text-gray-500">
+                    No liked recipes found.
+                  </p>
                 )}
               </div>
             )}
 
             {activeTab === "Saved" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {savedRecipes.length > 0 ? (
                   savedRecipes.map((recipe) => (
                     <div
-                      key={recipe.recipeId}
-                      className="p-4 border rounded-lg shadow-sm"
+                      key={recipe.recipeId._id}
+                      className="group relative border rounded-lg shadow-md bg-white overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+                      onClick={() => handleCardClick(recipe.recipeId._id)}
                     >
-                      <div className="relative h-48 w-full mb-4">
+                      <div className="relative h-40 w-full overflow-hidden rounded-t-lg">
                         <img
                           src={`${backendUrl}${recipe.recipeId.recipeImage}`}
                           alt={recipe.recipeId.title}
-                          className="h-full w-full rounded-lg object-cover"
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
                       </div>
-
-                      <h3 className="text-lg font-semibold text-gray-800">
-                        {recipe.recipeId.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 flex-grow">
-                        {recipe.recipeId.description}
-                      </p>
-                      {/* Add more recipe details as needed */}
+                      <div className="p-4">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1 truncate">
+                          {recipe.recipeId.title}
+                        </h3>
+                        <p className="text-sm text-gray-700 line-clamp-2">
+                          {recipe.recipeId.description}
+                        </p>
+                      </div>
                     </div>
                   ))
                 ) : (
-                  <p>No saved recipes found.</p>
+                  <p className="text-center text-gray-500">
+                    No saved recipes found.
+                  </p>
                 )}
               </div>
             )}
