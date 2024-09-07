@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import AddRecipe from "./pages/AddRecipe";
 import RecipeDetail from "./pages/RecipeDetails";
 import UpdateRecipe from "./pages/UpdateRecipe";
+import TestimonialCard from "./components/Home/Comments";
 
 function App() {
   return (

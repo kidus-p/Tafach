@@ -246,7 +246,6 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
   const handleCardClick = (id) => {
     navigate(`/recipe/${id}`);
   };
-  
 
   return (
     <div
@@ -260,7 +259,7 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
           <div
             className="relative flex h-64 justify-start items-end p-4 border-b border-gray-200 rounded-t-lg bg-cover bg-center text-white"
             style={{
-              backgroundImage: `url(${profilePic15})` ,
+              backgroundImage: `url(${profilePic15})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -312,61 +311,61 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
           </div>
 
           <div className="ml-10 mb-6 mt-16">
-  {/* Name and Email Section */}
-  <div className="flex flex-col space-y-1">
-    <h1 className="text-4xl font-bold text-gray-900">{name}</h1>
-    <p className="text-lg text-gray-600">{email}</p>
-  </div>
+            {/* Name and Email Section */}
+            <div className="flex flex-col space-y-1">
+              <h1 className="text-4xl font-bold text-gray-900">{name}</h1>
+              <p className="text-lg text-gray-600">{email}</p>
+            </div>
 
-  {/* Bio Section */}
-  <div className=" flex">
-    {/* Display Bio */}
-    <p className="text-gray-600 text-base flex-grow  max-w-xl border-b-2 border-green-400 pb-2">{bio}</p>
+            {/* Bio Section */}
+            <div className=" flex">
+              {/* Display Bio */}
+              <p className="text-gray-600 text-base flex-grow  max-w-xl border-b-2 border-green-400 pb-2">
+                {bio}
+              </p>
 
-    {/* Edit Icon Button */}
-    {!editBio && (
-      <button
-        onClick={() => setEditBio(true)}
-        className="ml-2 p-1 text-gray-500 hover:text-green-400 transition-colors duration-200"
-        aria-label="Edit Bio"
-      >
-       <svg
-  xmlns="http://www.w3.org/2000/svg"
-  className="h-6 w-6"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  strokeWidth="2"
->
-  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 00-3 0l-9 9v3h3l9-9z" />
-</svg>
+              {/* Edit Icon Button */}
+              {!editBio && (
+                <button
+                  onClick={() => setEditBio(true)}
+                  className="ml-2 p-1 text-gray-500 hover:text-green-400 transition-colors duration-200"
+                  aria-label="Edit Bio"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 00-3 0l-9 9v3h3l9-9z" />
+                  </svg>
+                </button>
+              )}
+            </div>
 
-      </button>
-    )}
-  </div>
-
-  {/* Bio Edit Mode */}
-  {editBio && (
-    <div className="mt-2">
-      <textarea
-        value={bio}
-        onChange={(e) => setBio(e.target.value)}
-        className="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-        rows="4"
-        placeholder="Write something about yourself..."
-      />
-      <div className="flex justify-start mt-2">
-        <button
-          onClick={handleBioUpdate}
-          className="bg-yellow-400 text-white rounded-md py-1 px-3 hover:bg-green-500 transition-colors duration-200"
-        >
-          Save
-        </button>
-      </div>
-    </div>
-  )}
-</div>
-
+            {/* Bio Edit Mode */}
+            {editBio && (
+              <div className="mt-2">
+                <textarea
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  className="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+                  rows="4"
+                  placeholder="Write something about yourself..."
+                />
+                <div className="flex justify-start mt-2">
+                  <button
+                    onClick={handleBioUpdate}
+                    className="bg-yellow-400 text-white rounded-md py-1 px-3 hover:bg-green-500 transition-colors duration-200"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Tab Section */}
           <div className="flex justify-around p-2 border-b">
@@ -396,7 +395,7 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                     onClick={() => handleCardClick(recipe._id)}
                   >
                     <img
-                      src={recipe.recipeImage}
+                      src={`${backendUrl}${recipe.recipeImage}`}
                       alt={recipe.title}
                       className="w-full h-40 object-cover"
                     />
@@ -438,7 +437,10 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                     onClick={() => handleCardClick(likedRecipe.recipeId._id)}
                   >
                     <img
-                      src={likedRecipe.recipeId.recipeImage || "https://via.placeholder.com/400"}
+                      src={
+                        `${backendUrl}${likedRecipe.recipeId.recipeImage}` ||
+                        "https://via.placeholder.com/400"
+                      }
                       alt={likedRecipe.recipeId.title}
                       className="w-full h-40 object-cover"
                     />
@@ -446,7 +448,9 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                       <h2 className="text-xl font-semibold text-gray-800">
                         {likedRecipe.recipeId.title}
                       </h2>
-                      <p className="text-gray-600 mt-2">{likedRecipe.recipeId.description}</p>
+                      <p className="text-gray-600 mt-2">
+                        {likedRecipe.recipeId.description}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -460,7 +464,10 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                     onClick={() => handleCardClick(savedRecipe.recipeId._id)}
                   >
                     <img
-                      src={savedRecipe.recipeId.recipeImage || "https://via.placeholder.com/400"}
+                      src={
+                        `${backendUrl}${savedRecipe.recipeId.recipeImage}` ||
+                        "https://via.placeholder.com/400"
+                      }
                       alt={savedRecipe.recipeId.title}
                       className="w-full h-40 object-cover"
                     />
@@ -468,7 +475,9 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                       <h2 className="text-xl font-semibold text-gray-800">
                         {savedRecipe.recipeId.title}
                       </h2>
-                      <p className="text-gray-600 mt-2">{savedRecipe.recipeId.description}</p>
+                      <p className="text-gray-600 mt-2">
+                        {savedRecipe.recipeId.description}
+                      </p>
                     </div>
                   </div>
                 ))}
