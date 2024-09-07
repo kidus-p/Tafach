@@ -33,26 +33,40 @@ const Navbar = () => {
     <nav className="absolute top-5 left-8 right-8 bg-white text-gray-800 shadow-md rounded-lg z-50">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         <div className="flex-shrink-0 flex items-center space-x-2">
-          <Link to="/" className="text-2xl font-bold text-green-600 hover:text-green-800">
+          <Link
+            to="/"
+            className="text-2xl font-bold text-green-600 hover:text-green-800"
+          >
             Gabbata
           </Link>
         </div>
 
         <div className="hidden md:flex flex-grow justify-center space-x-8 font-bold text-lg">
-  <Link to="/" className="hover:text-green-600 transition-colors duration-200">
-    Home
-  </Link>
-  <Link to="/recipes" className="hover:text-green-600 transition-colors duration-200">
-    Recipes
-  </Link>
-  <Link to="/about" className="hover:text-green-600 transition-colors duration-200">
-    About Us
-  </Link>
-  <Link to="/contact" className="hover:text-green-600 transition-colors duration-200">
-    Contact
-  </Link>
-</div>
-
+          <Link
+            to="/"
+            className="hover:text-green-600 transition-colors duration-200"
+          >
+            Home
+          </Link>
+          <Link
+            to="/recipes"
+            className="hover:text-green-600 transition-colors duration-200"
+          >
+            Recipes
+          </Link>
+          <Link
+            to="/about"
+            className="hover:text-green-600 transition-colors duration-200"
+          >
+            About Us
+          </Link>
+          <Link
+            to="/contact"
+            className="hover:text-green-600 transition-colors duration-200"
+          >
+            Contact
+          </Link>
+        </div>
 
         <div className="md:hidden flex-shrink-0">
           <button
