@@ -16,7 +16,8 @@ const Card = ({ recipe }) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:7070";
+  const backendUrl =
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:7070";
   const recipeImageUrl = `${backendUrl}${recipe.recipeImage}`;
   const profileImageUrl = `${backendUrl}${recipe.createdBy.profileImage}`;
   const [likedRecipes, setLikedRecipes] = useState([]);
@@ -30,7 +31,9 @@ const Card = ({ recipe }) => {
 
     const fetchLikeCount = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/like/countLikes/${recipe._id}`);
+        const response = await axios.get(
+          `${backendUrl}/api/like/countLikes/${recipe._id}`
+        );
         setLikeCount(response.data.totalLikes);
       } catch (error) {
         console.error("Error fetching like count:", error);
@@ -40,10 +43,14 @@ const Card = ({ recipe }) => {
     const fetchLikedRecipes = async () => {
       if (!user?._id) return;
       try {
-        const response = await axios.get(`${backendUrl}/api/like/likedrecipes/${user._id}`);
+        const response = await axios.get(
+          `${backendUrl}/api/like/likedrecipes/${user._id}`
+        );
         const liked = response.data || [];
         setLikedRecipes(liked);
-        const isCurrentlyLiked = liked.some((likedRecipe) => likedRecipe.recipeId._id === recipe._id);
+        const isCurrentlyLiked = liked.some(
+          (likedRecipe) => likedRecipe.recipeId._id === recipe._id
+        );
         setIsLiked(isCurrentlyLiked);
         console.log(liked);
       } catch (error) {
@@ -54,10 +61,14 @@ const Card = ({ recipe }) => {
     const fetchFavorites = async () => {
       if (!user?._id) return;
       try {
-        const response = await axios.get(`${backendUrl}/api/savedRecipe/getsavedrecipe/${user._id}`);
+        const response = await axios.get(
+          `${backendUrl}/api/savedRecipe/getsavedrecipe/${user._id}`
+        );
         const saved = response.data || [];
         setSavedRecipes(saved);
-        const isCurrentlySaved = saved.some((savedRecipe) => savedRecipe.recipeId._id === recipe._id);
+        const isCurrentlySaved = saved.some(
+          (savedRecipe) => savedRecipe.recipeId._id === recipe._id
+        );
         setIsSaved(isCurrentlySaved);
       } catch (error) {
         console.error("Error fetching saved recipes:", error);
@@ -67,10 +78,15 @@ const Card = ({ recipe }) => {
     const fetchReviews = async () => {
       if (!recipe?._id) return;
       try {
-        const response = await axios.get(`${backendUrl}/api/review/getallreviews/${recipe._id}`);
+        const response = await axios.get(
+          `${backendUrl}/api/review/getallreviews/${recipe._id}`
+        );
         const reviews = response.data || [];
         if (Array.isArray(reviews) && reviews.length) {
-          const totalRatings = reviews.reduce((acc, review) => acc + review.rating, 0);
+          const totalRatings = reviews.reduce(
+            (acc, review) => acc + review.rating,
+            0
+          );
           const avgRating = totalRatings / reviews.length;
           setAverageRating(avgRating.toFixed(1));
           setRatingCount(reviews.length);
@@ -155,10 +171,13 @@ const Card = ({ recipe }) => {
     const userId = user._id;
 
     try {
-      const response = await axios.post(`${backendUrl}/api/savedRecipe/addsavedrecipe`, {
-        recipeId,
-        userId,
-      });
+      const response = await axios.post(
+        `${backendUrl}/api/savedRecipe/addsavedrecipe`,
+        {
+          recipeId,
+          userId,
+        }
+      );
 
       if (response.data) {
         setIsSaved(!isSaved);
@@ -166,14 +185,17 @@ const Card = ({ recipe }) => {
         console.log("Response data is empty or not in expected format.");
       }
     } catch (error) {
-      console.error("Error saving recipe:", error.response?.data || error.message);
+      console.error(
+        "Error saving recipe:",
+        error.response?.data || error.message
+      );
       alert("Failed to save recipe. Please try again.");
     }
   };
 
   return (
     <div
-      className="bg-white shadow-sm rounded-lg overflow-hidden relative mb-5 cursor-pointer max-w-[600px] mx-auto hover:shadow-2xl transition-shadow duration-300 transform hover:scale-110"
+      className="bg-white shadow-sm rounded-lg overflow-hidden relative mb-5 cursor-pointer max-w-[600px] min-w-[320px] mx-auto hover:shadow-2xl transition-shadow duration-300 transform hover:scale-110"
       onClick={handleCardClick}
     >
       {/* Image Section */}
