@@ -30,96 +30,80 @@ const Navbar = () => {
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
   return (
-    <nav className="absolute top-5 left-8 right-8 bg-white text-gray-800 shadow-md rounded-lg z-50">
+    <nav className="absolute top-5 left-8 right-8 bg-white text-gray-800 shadow-md rounded-lg z-50 font-gloria">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
-        <div className="flex-shrink-0 flex items-center space-x-2">
-          <Link
-            to="/"
-            className="text-2xl font-bold text-green-600 hover:text-green-800"
-          >
-            Gabbata
-          </Link>
-        </div>
+      <div className="flex-shrink-0 flex items-center space-x-2 font-Yellowtail font-bold">
+  <Link
+    to="/"
+    className="text-4xl font-bold text-green-600 hover:text-green-800 hover:animate-vibrate"
+  >
+    Gabbata
+  </Link>
+</div>
 
-        <div className="hidden md:flex flex-grow justify-center space-x-8 font-bold text-lg">
+        <div className="hidden md:flex flex-grow justify-center space-x-8 font-bold text-lg ">
           <Link
             to="/"
-            className="hover:text-green-600 transition-colors duration-200"
+            className="hover:text-green-600 transition-colors duration-200 hover:animate-vibrate "
           >
             Home
           </Link>
           <Link
             to="/recipes"
-            className="hover:text-green-600 transition-colors duration-200"
+            className="hover:text-green-600 transition-colors duration-200 hover:animate-vibrate "
           >
             Recipes
           </Link>
           <Link
             to="/about"
-            className="hover:text-green-600 transition-colors duration-200"
+            className="hover:text-green-600 transition-colors duration-200 hover:animate-vibrate "
           >
             About Us
           </Link>
           <Link
             to="/contact"
-            className="hover:text-green-600 transition-colors duration-200"
+            className="hover:text-green-600 transition-colors duration-200 hover:animate-vibrate "
           >
             Contact
           </Link>
         </div>
 
         <div className="md:hidden flex-shrink-0">
-          <button
-            onClick={toggleDrawer}
-            className="flex items-center justify-center text-gray-800 hover:text-gray-600"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
-        </div>
+</div>
 
-        <div className="hidden md:flex flex-shrink-0">
-          {isAuthenticated ? (
-            <button
-              onClick={toggleDrawer}
-              className="flex items-center justify-center text-gray-800 hover:text-gray-600"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-          ) : (
-            <button
-              onClick={openModal}
-              className="bg-white text-gray-800 py-2 px-7 rounded hover:bg-green-500 hover:text-white font-bold"
-            >
-              Login
-            </button>
-          )}
-        </div>
+<div className="hidden md:flex flex-shrink-0">
+  {isAuthenticated ? (
+    <button
+    onClick={toggleDrawer}
+    className="flex items-center justify-center text-green-800 hover:text-green-600 transform transition-all duration-300 hover:scale-110"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6 transform transition-all duration-300 hover:rotate-45"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        className="transition-all duration-300"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M4 6h16M4 12h16M4 18h16"
+      />
+    </svg>
+  </button>
+  
+  ) : (
+    <button
+      onClick={openModal}
+       className="bg-green-600 text-white py-2 px-7 rounded font-bold transform transition-all duration-300 shadow-lg animate-rotate"
+    >
+      Login
+    </button>
+  )}
+</div>
+
       </div>
 
       {isDrawerOpen && (
@@ -131,7 +115,7 @@ const Navbar = () => {
         />
       )}
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} message={message}>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
         <Popout
           isLoginForm={isLoginForm}
           handleLogin={handleLogin}
@@ -141,8 +125,8 @@ const Navbar = () => {
           setPassword={setPassword}
           setConfirmPassword={setConfirmPassword}
           toggleForm={toggleForm}
-          message={message}
         />
+        
       </Modal>
     </nav>
   );

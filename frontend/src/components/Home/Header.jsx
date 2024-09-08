@@ -1,25 +1,12 @@
-import { useAuth } from "../Home/useAuth"; // Update the path to your context
+import { useAuth } from "../Home/useAuth";
 import Navbar from "../Home/Nav";
 import Modal from "./Modal";
 import Popout from "../Home/popout";
 import { useNavigate } from "react-router-dom";
 import {
-  bagVid1,
-  bagVid2,
-  bagVid3,
-  bagVid4,
-  bagVid5,
-  bagVid6,
-  bagVid7,
-  bagVid8,
-  bagVid9,
-  bagVid10,
-  bagVid11,
-  bagVid12,
-  bagVid13,
-  bagVid14,
-  bagVid15,
-  bagVid16,
+  bagVid1, bagVid2, bagVid3, bagVid4, bagVid5, bagVid6, 
+  bagVid7, bagVid8, bagVid9, bagVid10, bagVid11, 
+  bagVid12, bagVid13, bagVid14, bagVid15, bagVid16,
 } from "../../utilitys/BackgrounVids";
 import { useEffect, useState } from "react";
 
@@ -42,28 +29,14 @@ const Header = () => {
 
   const navigate = useNavigate();
   const bagVids = [
-    bagVid1,
-    bagVid2,
-    bagVid3,
-    bagVid4,
-    bagVid5,
-    bagVid6,
-    bagVid7,
-    bagVid8,
-    bagVid9,
-    bagVid10,
-    bagVid11,
-    bagVid12,
-    bagVid13,
-    bagVid14,
-    bagVid15,
-    bagVid16,
+    bagVid1, bagVid2, bagVid3, bagVid4, bagVid5, bagVid6, 
+    bagVid7, bagVid8, bagVid9, bagVid10, bagVid11, 
+    bagVid12, bagVid13, bagVid14, bagVid15, bagVid16,
   ];
 
   const [currentVideo, setCurrentVideo] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
 
-  // Function to change the video with smooth sliding effect
   const changeVideo = (direction) => {
     setTransitioning(true);
     setTimeout(() => {
@@ -75,17 +48,20 @@ const Header = () => {
         }
       });
       setTransitioning(false);
-    }, 300); 
+    }, 300);
   };
-
 
   useEffect(() => {
     const videoInterval = setInterval(() => {
       changeVideo("next");
-    }, 10000); 
+    }, 10000);
 
     return () => clearInterval(videoInterval);
   }, [bagVids.length]);
+
+  // Function to check if message is error or success
+  const isErrorMessage = message && message.toLowerCase().includes("error");
+  const isSuccessMessage = message && !isErrorMessage;
 
   return (
     <div className="w-full h-[100vh] overflow-hidden relative">
@@ -106,36 +82,35 @@ const Header = () => {
             />
           </div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent flex flex-col justify-center items-center z-10 px-4">
-          {/* Headline Section */}
-          <h1 className="text-white text-4xl md:text-5xl font-extrabold text-center drop-shadow-lg">
-            Gabbata: Your Gateway to Ethiopian Flavors
-          </h1>
-          <p className="text-white text-lg md:text-xl text-center mt-4 px-4 drop-shadow-md">
-            Discover the vibrant world of Ethiopian cuisine with our authentic
-            recipes, crafted for both tradition and taste.
-          </p>
+
+        {/* Main Content with Enhancements */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent flex flex-col justify-center items-center z-10 px-6">
+          <div className="text-center mb-8">
+            <h1 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold mb-4 drop-shadow-lg">
+              <span className="">Gabbata:</span>  Ethiopian Flavors Reimagined
+            </h1>
+            <p className="text-white text-lg md:text-xl lg:text-2xl mb-6 px-4 drop-shadow-md">
+              Discover authentic recipes crafted with tradition and taste.
+            </p>
+          </div>
 
           <button
-            className="bg-transparent text-white py-3 px-10 rounded border border-white hover:bg-green-500 hover:scale-105 transition-transform font-bold text-lg shadow-lg mt-8"
+            className="bg-green-600 text-white py-3 px-8 rounded hover:bg-green-700 transition-colors font-semibold text-lg shadow-lg mt-4"
             onClick={() =>
               user === null ? openModal() : navigate("/add-recipe")
             }
           >
             Share Your Recipe
           </button>
-          {/* Subtitle */}
+
           <p className="text-white text-sm md:text-md text-center px-4 mt-4 drop-shadow-md">
-            Dive into the rich cultural heritage of Ethiopia, one dish at a
-            time.
+            Dive into the rich cultural heritage of Ethiopia.
           </p>
         </div>
       </div>
+      
       {/* Modal for Login/Register */}
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          {isLoginForm ? "Login" : "Register"}
-        </h2>
         <Popout
           isLoginForm={isLoginForm}
           handleLogin={handleLogin}
@@ -147,7 +122,16 @@ const Header = () => {
           toggleForm={toggleForm}
           message={message}
         />
-        <p className="text-red-500 text-center mt-2">{message}</p>
+        {/* Message Display */}
+        {message && (
+          <p
+            className={`text-center mt-4 ${
+              isSuccessMessage ? "text-red-500" : "text-green-500"
+            }`}
+          >
+            {message}
+          </p>
+        )}
       </Modal>
     </div>
   );
