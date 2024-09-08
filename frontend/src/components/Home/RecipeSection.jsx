@@ -85,7 +85,7 @@ function CategoryList({
       {selectedCategories.length > 0 && (
         <button
           onClick={onClearAll}
-          className="mt-4 px-6 py-4 rounded-full bg-red-800 text-white font-semibold text-lg shadow-md transition-transform transform hover:scale-105"
+          className="mt-4 px-6 py-4 rounded-full bg-red-500 text-white font-semibold text-lg shadow-md transition-transform transform hover:scale-105"
         >
           Clear All Selected Categories
         </button>

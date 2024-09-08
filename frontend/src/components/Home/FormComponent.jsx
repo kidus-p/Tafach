@@ -1,6 +1,4 @@
-import { useCallback } from 'react';
-// f9f7f2
-// ffc0cb
+import { useId } from 'react'; // React 18+ API
 
 const FormComponent = ({
   isLoginForm,
@@ -14,85 +12,110 @@ const FormComponent = ({
   confirmPassword,
   setConfirmPassword,
   toggleForm,
-  message,
+  message
 }) => {
-  const handleNameChange = useCallback((e) => setName(e.target.value), [setName]);
-  const handleEmailChange = useCallback((e) => setEmail(e.target.value), [setEmail]);
-  const handlePasswordChange = useCallback((e) => setPassword(e.target.value), [setPassword]);
-  const handleConfirmPasswordChange = useCallback((e) => setConfirmPassword(e.target.value), [setConfirmPassword]);
+  const id = useId(); 
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#f9f7f2] p-8 rounded-lg mx-auto borde">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-        {isLoginForm ? 'Welcome Back!' : 'Join Us!'}
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 bg-white p-8 shadow-lg rounded-lg max-w-lg mx-auto border border-green-200"
+      style={{
+        backgroundImage: 'url("/images/form-bg.jpg")', // Use an appropriate background image
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <h2 className="text-3xl font-extrabold text-center text-green-700 mb-6">
+        {isLoginForm ? "Welcome Back!" : "Join Our Recipe Community"}
       </h2>
 
+      {/* Name field only shown for Signup */}
       {!isLoginForm && (
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-1">Name</label>
+        <div>
+          <label htmlFor={`${id}-name`} className="block text-sm font-medium text-gray-800 mb-2">
+            Full Name
+          </label>
           <input
+            id={`${id}-name`} // Unique id
+            name="name"
             type="text"
             value={name}
-            onChange={handleNameChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition duration-300 ease-in-out bg-white bg-opacity-80"
+            autoComplete="name"
             required
             placeholder="Enter your name"
           />
         </div>
       )}
 
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">Email</label>
+      <div>
+        <label htmlFor={`${id}-email`} className="block text-sm font-medium text-gray-800 mb-2">
+          Email Address
+        </label>
         <input
+          id={`${id}-email`} // Unique id
+          name="email"
           type="email"
           value={email}
-          onChange={handleEmailChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition duration-300 ease-in-out bg-white bg-opacity-80"
+          autoComplete="email"
           required
-          placeholder="Enter your email"
+          placeholder="Your email address"
         />
       </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1">Password</label>
+      <div>
+        <label htmlFor={`${id}-password`} className="block text-sm font-medium text-gray-800 mb-2">
+          Password
+        </label>
         <input
+          id={`${id}-password`} // Unique id
+          name="password"
           type="password"
           value={password}
-          onChange={handlePasswordChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition duration-300 ease-in-out bg-white bg-opacity-80"
+          autoComplete="current-password"
           required
-          placeholder="Enter your password"
+          placeholder="Create a password"
         />
       </div>
 
       {!isLoginForm && (
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-1">Confirm Password</label>
+        <div>
+          <label htmlFor={`${id}-confirmPassword`} className="block text-sm font-medium text-gray-800 mb-2">
+            Confirm Password
+          </label>
           <input
+            id={`${id}-confirmPassword`} // Unique id
+            name="confirmPassword"
             type="password"
             value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-200"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition duration-300 ease-in-out bg-white bg-opacity-80"
+            autoComplete="new-password"
             required
             placeholder="Confirm your password"
           />
         </div>
       )}
 
-      <button
-        type="submit"
-        className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-200"
-      >
-        {isLoginForm ? 'Login' : 'Register'}
-      </button>
-
-      <div className="text-center mt-4">
+      <div className="flex justify-between items-center">
+        <button
+          type="submit"
+          className="bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition duration-300"
+        >
+          {isLoginForm ? "Log In" : "Sign Up"}
+        </button>
         <button
           type="button"
           onClick={toggleForm}
-          className="text-blue-500 hover:underline focus:outline-none"
+          className="text-green-600 hover:underline transition duration-300"
         >
-          {isLoginForm ? 'Create an account' : 'Already have an account? Login'}
+          {isLoginForm ? "New here? Sign Up" : "Already have an account? Log In"}
         </button>
       </div>
     </form>

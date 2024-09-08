@@ -1,5 +1,4 @@
 import FormComponent from './FormComponent';
-
 const Popout = ({
   isLoginForm,
   handleLogin,

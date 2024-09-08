@@ -131,10 +131,7 @@ const Navbar = () => {
         />
       )}
 
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          {isLoginForm ? "Login" : "Register"}
-        </h2>
+      <Modal isOpen={isModalOpen} onClose={closeModal} message={message}>
         <Popout
           isLoginForm={isLoginForm}
           handleLogin={handleLogin}
@@ -146,7 +143,6 @@ const Navbar = () => {
           toggleForm={toggleForm}
           message={message}
         />
-        <p className="text-red-500 text-center mt-2">{message}</p>
       </Modal>
     </nav>
   );

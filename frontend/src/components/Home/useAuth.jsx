@@ -54,14 +54,23 @@ export const AuthProvider = ({ children }) => {
         `${import.meta.env.VITE_BACKEND_URL}/api/user/signup`,
         { name, email, password }
       );
-      setMessage(response.data.message);
+      setMessage("Signup successful!");
+  
+      // Close modal and clear message after 1 second
+      setTimeout(() => {
+        setIsAuthenticated(true);
+        localStorage.setItem("user", JSON.stringify(response.data));
+        setUser(response.data.result);
+        closeModal();
+        setMessage(""); // Clear message
+      }, 1000);
     } catch (error) {
       setMessage(
         error.response?.data?.message || "An error occurred during signup"
       );
     }
   };
-
+  
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -70,10 +79,16 @@ export const AuthProvider = ({ children }) => {
         { email, password }
       );
       if (response.data.accessToken) {
-        setIsAuthenticated(true);
-        localStorage.setItem("user", JSON.stringify(response.data));
-        setUser(response.data.result);
         setMessage("Login successful!");
+  
+        // Close modal and clear message after 2 seconds
+        setTimeout(() => {
+          setIsAuthenticated(true);
+          localStorage.setItem("user", JSON.stringify(response.data));
+          setUser(response.data.result);
+          closeModal();
+          setMessage(""); // Clear message
+        }, 2000);
       }
     } catch (error) {
       setMessage(
@@ -81,6 +96,7 @@ export const AuthProvider = ({ children }) => {
       );
     }
   };
+  
 
   const handleLogout = async () => {
     try {
@@ -102,12 +118,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const toggleForm = () => {
-    setIsLoginForm(prev => !prev);
+    setIsLoginForm((prev) => !prev);
     setMessage("");
   };
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setMessage(""); // Clear the message when closing modal
+  };
 
   return (
     <AuthContext.Provider
