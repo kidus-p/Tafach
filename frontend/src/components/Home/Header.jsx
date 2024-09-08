@@ -95,7 +95,7 @@ const Header = () => {
           </div>
 
           <button
-            className="bg-green-600 text-white py-3 px-8 rounded hover:bg-green-700 transition-colors font-semibold text-lg shadow-lg mt-4"
+            className="bg-green-600 text-white py-3 px-8 rounded hover:bg-green-700 transition-colors font-bold font-gloria text-lg shadow-lg mt-4 "
             onClick={() =>
               user === null ? openModal() : navigate("/add-recipe")
             }
