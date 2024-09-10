@@ -7,6 +7,7 @@ import {
 } from "@material-tailwind/react";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:7070";
+
 function StarIcon({ filled }) {
   return (
     <svg
@@ -33,78 +34,77 @@ const TestimonialCard = ({
   timeAgo,
 }) => {
   return (
-    <>
-      <Card
+    <Card
+      color="transparent"
+      shadow={false}
+      className="w-full rounded-lg p-6"
+    >
+      <CardHeader
         color="transparent"
+        floated={false}
         shadow={false}
-        className="w-full rounded-lg p-6"
+        className="flex items-center gap-4 pb-2"
       >
-        <CardHeader
-          color="transparent"
-          floated={false}
-          shadow={false}
-          className="flex items-center gap-4 pb-2"
-        >
-          <Avatar
-            size="md"
-            variant="rounded"
-            src={
-              `${backendUrl}${profileImage}` ||
-              "https://via.placeholder.com/150"
-            }
-            alt={name}
-            className="shadow-lg"
-          />
-          <div className="flex w-full flex-col gap-1">
-            <Typography
-              variant="h6"
-              color="blue-gray"
-              className="font-bold text-lg"
-              style={{ paddingLeft: "0.2rem" }}
-            >
-              {name}
-            </Typography>
-            {role && (
-              <Typography
-                variant="small"
-                color="green"
-                className="text-sm font-medium pl-2"
-              >
-                {role}
-              </Typography>
-            )}
+        <Avatar
+          size="lg" // Adjusted size to 'lg' for better fitting
+          variant="rounded"
+          src={
+            `${backendUrl}${profileImage}` ||
+            "https://via.placeholder.com/150"
+          }
+          alt={name}
+          className="shadow-lg"
+          style={{ width: "60px", height: "60px" }} 
+        />
+        <div className="flex w-full flex-col gap-1">
+          <Typography
+            variant="h6"
+            color="blue-gray"
+            className="font-bold text-lg"
+            style={{ paddingLeft: "0.2rem" }}
+          >
+            {name}
+          </Typography>
+          {role && (
             <Typography
               variant="small"
-              color="gray"
-              className="text-xs mt-1 pl-2"
+              color="green"
+              className="text-sm font-medium pl-2"
             >
-              {timeAgo}
+              {role}
             </Typography>
-            <div className="flex justify-end items-center gap-1">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <StarIcon key={star} filled={star <= rating} />
-              ))}
-            </div>
+          )}
+          <Typography
+            variant="small"
+            color="gray"
+            className="text-xs mt-1 pl-2"
+          >
+            {timeAgo}
+          </Typography>
+          <div className="flex justify-end items-center gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <StarIcon key={star} filled={star <= rating} />
+            ))}
           </div>
-        </CardHeader>
-        <CardBody className="relative p-0 pt-4">
-          {/* Large black quotation mark */}
-          <div className="absolute top-0 left-0 w-full text-6xl text-black opacity-20 font-serif -ml-6">
-            &ldquo;
-          </div>
-          {/* Vertical line */}
-          <div className="relative flex gap-4 pl-10 pr-4">
-            <div className="border-l-2 border-green-300"></div>
-            <Typography
-              color="gray"
-              className="text-base leading-relaxed pl-4 "
-            >
-              {comment}
-            </Typography>
-          </div>
-        </CardBody>
-      </Card>
-    </>
+        </div>
+      </CardHeader>
+      <CardBody className="relative p-0 pt-4">
+        {/* Large black quotation mark */}
+        <div className="absolute top-0 left-0 w-full text-6xl text-black opacity-20 font-serif -ml-6">
+          &ldquo;
+        </div>
+        {/* Vertical line */}
+        <div className="relative flex gap-4 pl-10 pr-4">
+          <div className="border-l-2 border-green-300"></div>
+          <Typography
+            color="gray"
+            className="text-base leading-relaxed pl-4"
+          >
+            {comment}
+          </Typography>
+        </div>
+      </CardBody>
+    </Card>
   );
 };
 

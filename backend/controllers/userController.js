@@ -5,6 +5,13 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
+const crypto = require('crypto');
+
+// Generate reset token
+const generateResetToken = (userId) => {
+  return crypto.randomBytes(32).toString('hex');
+};
+
 
 // generate token
 const generateToken = (userId) => {
@@ -210,3 +217,101 @@ exports.logout = async (req, res) => {
   await Token.findOneAndDelete({ token });
   res.status(200).json({ message: "Logged out" });
 };
+
+
+
+// Request Password Reset
+exports.requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Generate reset token and expiration
+    const resetToken = generateResetToken(user._id);
+    const expiration = Date.now() + 3600000; // 1 hour
+
+    user.resetToken = resetToken;
+    user.resetTokenExpiration = expiration;
+    await user.save();
+
+    // Send reset email
+    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Password Reset Request",
+      html: `<h1>Reset Your Password</h1><p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`
+    });
+
+    res.status(200).json({ message: "Password reset email sent" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Reset Password
+exports.resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Token is invalid or expired" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.resetToken = "";
+    user.resetTokenExpiration = null;
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+// contact us 
+exports.contactUs= async (req , res)=>{
+  const { name, email, message } = req.body;
+
+  // Basic validation (You can expand this based on your needs)
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  // Nodemailer configuration
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER, 
+      pass: process.env.PASSWORD, 
+    },
+  });
+
+  const mailOptions = {
+    from: email,
+    to: 'tizazab752@gmail.com',
+    subject: `Contact Us Form - Message from ${name}`,
+    text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+  };
+
+  try {
+    // Send email
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: 'Message sent successfully.' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ error: 'Failed to send message.' });
+  }
+}

@@ -180,7 +180,9 @@ const RecipeSection = () => {
     : filteredRecipes.slice(0, 4);
 
   return (
-    <div className="flex flex-col items-center min-h-screen px-6 xl:px-12 bg-white py-12">
+    <div 
+    id="recipes"
+    className="flex flex-col items-center min-h-screen px-6 xl:px-12 bg-white py-12">
       <div className="w-full md:w-4/5 lg:w-3/4 mb-12">
         <h1 className="mt-8 mb-8 text-5xl xl:text-6xl text-center font-bold leading-tight text-gray-800">
           Discover the Heart of <span className="text-green-600">Ethiopia</span>{" "}

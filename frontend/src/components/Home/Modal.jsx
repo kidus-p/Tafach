@@ -19,16 +19,6 @@ const Modal = ({ isOpen, onClose, children, message }) => {
           {/* Modal Content */}
           <div className="text-center">
             {children}
-            {/* Message Display */}
-            {message && (
-              <p
-                className={`mt-4 ${
-                  message.includes("successful") ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {message}
-              </p>
-            )}
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import RecipeCard from "./MyrecipeCard";
 import {
   profilePic1,
   profilePic2,
@@ -38,32 +39,6 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
   const [myRecipes, setMyRecipes] = useState([]);
   const [likedRecipes, setLikedRecipes] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([]);
-
-  const profilePics = [
-    profilePic1,
-    profilePic2,
-    profilePic3,
-    profilePic4,
-    profilePic5,
-    profilePic6,
-    profilePic7,
-    profilePic8,
-    profilePic9,
-    profilePic10,
-    profilePic11,
-    profilePic12,
-    profilePic13,
-    profilePic14,
-    profilePic15,
-    profilePic16,
-    profilePic17,
-    profilePic18,
-    profilePic19,
-    profilePic20,
-  ];
-
-  const randomProfilePic =
-    profilePics[Math.floor(Math.random() * profilePics.length)];
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -131,12 +106,7 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
   const fetchLikedRecipes = async () => {
     try {
       const response = await axios.get(
-        `${backendUrl}/api/like/likedrecipes/${user._id}`,
-        {
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // },
-        }
+        `${backendUrl}/api/like/likedrecipes/${user._id}`
       );
       setLikedRecipes(response.data);
       console.log(likedRecipes);
@@ -249,7 +219,7 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
 
   return (
     <div
-      className={`fixed z-30 inset-0 flex justify-center items-center bg-transparent  transition-transform duration-300 ease-in-out ${
+      className={`font-sans fixed z-30 inset-0 flex justify-center items-center bg-transparent transition-transform duration-300 ease-in-out ${
         isDrawerOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
@@ -257,241 +227,181 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
         <div className="flex flex-col h-full">
           {/* Header Section */}
           <div
-            className="relative flex h-64 justify-start items-end p-4 border-b border-gray-200 rounded-t-lg bg-cover bg-center text-white"
-            style={{
-              backgroundImage: `url(${profilePic15})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              borderRadius: "8px 8px 0 0",
-            }}
-          >
+  className="relative flex h-1/4 justify-start items-end p-6 border-b border-gray-200 rounded-t-lg bg-cover bg-center text-white"
+  style={{
+    backgroundImage: `url(${profilePic1})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    borderRadius: "12px 12px 0 0",
+  }}
+>
+  <button
+    onClick={handleClose}
+    className="absolute top-6 right-6 text-white hover:text-yellow-400 focus:outline-none transition-transform duration-200 transform hover:scale-110"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  </button>
+
+  {/* User Profile Picture */}
+  <div className=" absolute -bottom-16 left-6">
+    <div className=" relative h-36 w-36 rounded-full bg-gray-300 border-4 border-white overflow-hidden shadow-lg z-50">
+      {profilePicture ? (
+        <img
+          src={profilePicture}
+          alt="User Profile"
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <span className="text-4xl font-bold text-gray-700 flex justify-center items-center h-full">
+          {user.name.charAt(0).toUpperCase()}
+        </span>
+      )}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleProfilePictureUpload}
+        className="absolute inset-0 opacity-0 cursor-pointer"
+      />
+    </div>
+  </div>
+</div>
+
+          {/* User Information Section */}
+          <div className="flex-1 overflow-y-auto p-6">
+  {/* Profile Information */}
+  <div className="mt-16">
+    <h2 className="text-2xl font-bold text-gray-800">{name}</h2>
+    <p className="text-sm text-gray-600">{email}</p>
+    <div className="mt-2">
+      {editBio ? (
+        <>
+          <textarea
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            className="border border-gray-300 rounded-lg w-full p-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            rows="3"
+          />
+          <div className="flex justify-end space-x-2 mt-2">
             <button
-              onClick={handleClose}
-              className="absolute top-4 right-4 text-white hover:text-yellow-400 focus:outline-none transition-transform duration-200 transform hover:scale-110"
+              onClick={handleBioUpdate}
+              className="text-sm text-white bg-green-500 px-3 py-1 rounded-lg hover:bg-green-600 focus:outline-none"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              Save
             </button>
-
-            {/* User Profile Picture */}
-            <div className="absolute -bottom-12 left-4">
-              <div className="relative h-32 w-32 rounded-full bg-gray-300 border-4 border-white overflow-hidden shadow-lg">
-                {profilePicture ? (
-                  <img
-                    src={profilePicture}
-                    alt="User Profile"
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <span className="text-3xl font-bold text-gray-700 flex justify-center items-center h-full">
-                    {user.name.charAt(0).toUpperCase()}
-                  </span>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleProfilePictureUpload}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                />
-              </div>
-            </div>
+            <button
+              onClick={() => setEditBio(false)}
+              className="text-sm text-white bg-red-500 px-3 py-1 rounded-lg hover:bg-red-600 focus:outline-none"
+            >
+              Cancel
+            </button>
           </div>
+        </>
+      ) : (
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-gray-800">{bio}</p>
+          <button
+            onClick={() => setEditBio(true)}
+            className="text-sm text-green-500 hover:text-green-700 focus:outline-none"
+          >
+            Edit
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
 
-          <div className="ml-10 mb-6 mt-16">
-            {/* Name and Email Section */}
-            <div className="flex flex-col space-y-1">
-              <h1 className="text-4xl font-bold text-gray-900">{name}</h1>
-              <p className="text-lg text-gray-600">{email}</p>
-            </div>
+  {/* Tabs Navigation */}
+  <div className="mt-6 w-full flex ">
+  {["My Recipes", "Liked", "Saved"].map((tab) => (
+    <button
+      key={tab}
+      onClick={() => setActiveTab(tab)}
+      className={`flex-1 py-3 mx-3 rounded-lg font-semibold text-sm focus:outline-none transition-all duration-300 ease-in-out transform 
+        ${
+          activeTab === tab
+            ? "bg-green-600 text-white shadow-lg scale-105 hover:scale-110 hover:shadow-xl"
+            : "bg text-gray-800 hover:shadow-md hover:scale-105"
+        }`}
+    >
+      {tab}
+    </button>
+  ))}
+</div>
 
-            {/* Bio Section */}
-            <div className=" flex">
-              {/* Display Bio */}
-              <p className="text-gray-600 text-base flex-grow  max-w-xl border-b-2 border-green-400 pb-2">
-                {bio}
-              </p>
 
-              {/* Edit Icon Button */}
-              {!editBio && (
-                <button
-                  onClick={() => setEditBio(true)}
-                  className="ml-2 p-1 text-gray-500 hover:text-green-400 transition-colors duration-200"
-                  aria-label="Edit Bio"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 00-3 0l-9 9v3h3l9-9z" />
-                  </svg>
-                </button>
-              )}
-            </div>
+  {/* Conditional Rendering Based on Active Tab */}
+  <div className="mt-4">
+    {activeTab === "My Recipes" && (
+      <div>
+        <h3 className="text-lg font-semibold text-gray-800">My Recipes</h3>
+        <ul className="mt-2 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {myRecipes.map((recipe) => (
+            <RecipeCard
+              key={recipe._id}
+              recipe={recipe}
+              handleCardClick={handleCardClick}
+              handleUpdateRecipe={handleUpdateRecipe}
+              handleDeleteRecipe={handleDeleteRecipe}
+              tab={activeTab} // Pass the active tab
+            />
+          ))}
+        </ul>
+      </div>
+    )}
 
-            {/* Bio Edit Mode */}
-            {editBio && (
-              <div className="mt-2">
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  className="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-                  rows="4"
-                  placeholder="Write something about yourself..."
-                />
-                <div className="flex justify-start mt-2">
-                  <button
-                    onClick={handleBioUpdate}
-                    className="bg-yellow-400 text-white rounded-md py-1 px-3 hover:bg-green-500 transition-colors duration-200"
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+    {activeTab === "Liked" && (
+      <div>
+        <h3 className="text-lg font-semibold text-gray-800">Liked Recipes</h3>
+        <ul className="mt-2 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {likedRecipes.map((recipe) => (
+            <RecipeCard
+              key={recipe._id}
+              recipe={recipe.recipeId}
+              handleCardClick={handleCardClick}
+              tab={activeTab} // Pass the active tab
+            />
+          ))}
+        </ul>
+      </div>
+    )}
 
-          {/* Tab Section */}
-          <div className="flex justify-around p-2 border-b">
-            {["My Recipes", "Liked", "Saved"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`text-sm font-semibold py-2 px-4 ${
-                  activeTab === tab
-                    ? "border-b-2 border-green-500 text-green-500"
-                    : "text-gray-500 hover:text-green-500 transition-colors"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+    {activeTab === "Saved" && (
+      <div>
+        <h3 className="text-lg font-semibold text-gray-800">Saved Recipes</h3>
+        <ul className="mt-2 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {savedRecipes.map((recipe) => (
+            <RecipeCard
+              key={recipe._id}
+              recipe={recipe.recipeId}
+              handleCardClick={handleCardClick}
+              tab={activeTab} // Pass the active tab
+            />
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</div>
 
-          {/* Content Section */}
-          <div className="flex-grow overflow-auto p-4 bg-white">
-            {activeTab === "My Recipes" && myRecipes.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {myRecipes.map((recipe) => (
-                  <div
-                    key={recipe._id}
-                    className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-transform duration-200"
-                    onClick={() => handleCardClick(recipe._id)}
-                  >
-                    <img
-                      src={`${backendUrl}${recipe.recipeImage}`}
-                      alt={recipe.title}
-                      className="w-full h-40 object-cover"
-                    />
-                    <div className="p-4">
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        {recipe.title}
-                      </h2>
-                      <p className="text-gray-600 mt-2">{recipe.description}</p>
-                      <div className="mt-4 flex space-x-4 justify-between">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleUpdateRecipe(recipe._id);
-                          }}
-                          className="text-blue-600 hover:underline"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteRecipe(recipe._id);
-                          }}
-                          className="text-red-600 hover:underline"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : activeTab === "Liked" && likedRecipes.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {likedRecipes.map((likedRecipe) => (
-                  <div
-                    key={likedRecipe._id}
-                    className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-transform duration-200"
-                    onClick={() => handleCardClick(likedRecipe.recipeId._id)}
-                  >
-                    <img
-                      src={
-                        `${backendUrl}${likedRecipe.recipeId.recipeImage}` ||
-                        "https://via.placeholder.com/400"
-                      }
-                      alt={likedRecipe.recipeId.title}
-                      className="w-full h-40 object-cover"
-                    />
-                    <div className="p-4">
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        {likedRecipe.recipeId.title}
-                      </h2>
-                      <p className="text-gray-600 mt-2">
-                        {likedRecipe.recipeId.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : activeTab === "Saved" && savedRecipes.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {savedRecipes.map((savedRecipe) => (
-                  <div
-                    key={savedRecipe.recipeId._id}
-                    className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-transform duration-200"
-                    onClick={() => handleCardClick(savedRecipe.recipeId._id)}
-                  >
-                    <img
-                      src={
-                        `${backendUrl}${savedRecipe.recipeId.recipeImage}` ||
-                        "https://via.placeholder.com/400"
-                      }
-                      alt={savedRecipe.recipeId.title}
-                      className="w-full h-40 object-cover"
-                    />
-                    <div className="p-4">
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        {savedRecipe.recipeId.title}
-                      </h2>
-                      <p className="text-gray-600 mt-2">
-                        {savedRecipe.recipeId.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-gray-500">No content available.</p>
-            )}
-          </div>
-
-          {/* Logout Button */}
-          <div className="p-4 bg-gray-100">
+          {/* Footer Section */}
+          <div className="p-4 border-t border-gray-200">
             <button
               onClick={handleLogoutAndCloseDrawer}
-              className="w-full bg-red-500 text-white font-semibold py-2 rounded-md hover:bg-red-600 transition-colors"
+              className="w-full py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
             >
               Logout
             </button>

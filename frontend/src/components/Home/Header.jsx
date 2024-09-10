@@ -64,7 +64,9 @@ const Header = () => {
   const isSuccessMessage = message && !isErrorMessage;
 
   return (
-    <div className="w-full h-[100vh] overflow-hidden relative">
+    <div 
+    id="hero"
+    className="w-full h-[100vh] overflow-hidden relative">
       <Navbar />
       <div className="relative w-full h-full overflow-hidden">
         {/* Video Slider */}
@@ -126,12 +128,13 @@ const Header = () => {
         {message && (
           <p
             className={`text-center mt-4 ${
-              isSuccessMessage ? "text-red-500" : "text-green-500"
+              isErrorMessage ? "text-red-600" : "text-green-600"
             }`}
           >
             {message}
           </p>
-        )}
+        )
+        }
       </Modal>
     </div>
   );
