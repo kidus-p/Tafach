@@ -4,9 +4,13 @@ import Home from "./pages/Home";
 import AddRecipe from "./pages/AddRecipe";
 import RecipeDetail from "./pages/RecipeDetails";
 import UpdateRecipe from "./pages/UpdateRecipe";
-import TestimonialCard from "./components/Home/Comments";
+import AOS from "aos";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
+  }, []);
   return (
     <AuthProvider>
       <Router>

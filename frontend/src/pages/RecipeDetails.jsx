@@ -1,15 +1,15 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 import { useAuth } from "../components/Home/useAuth";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FaClock, FaStar, FaUserCircle } from "react-icons/fa";
+import { FaClock, FaStar, FaArrowLeft } from "react-icons/fa"; // Import FaArrowLeft
 import format from "date-fns/format";
 import { differenceInHours } from "date-fns";
-import Navbar from "../components/Home/Nav";
 import TestimonialCard from "../components/Home/Comments";
 
 const RecipeDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // Initialize navigate
   const [recipe, setRecipe] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({ comment: "", rating: 5 });
@@ -107,10 +107,17 @@ const RecipeDetails = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
       <div className="bg-gray-100 min-h-screen py-12 px-6">
         {recipe ? (
           <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+            {/* Back Arrow Button */}
+            <button
+              className="fixed top-18 left-52 text-gray-700 hover:text-gray-900 text-2xl z-50"
+              onClick={() => navigate("/#recipes")} 
+            >
+              <FaArrowLeft />
+            </button>
+
             {/* Recipe Image */}
             <div className="relative">
               <img
@@ -132,9 +139,6 @@ const RecipeDetails = () => {
                 <span className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg shadow-md">
                   Servings: {recipe.serving}
                 </span>
-                {/* <span className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg shadow-md">
-                Difficulty: {recipe.difficulty}
-              </span> */}
               </div>
               <div className="mb-8">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">

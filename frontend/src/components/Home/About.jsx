@@ -3,7 +3,9 @@ import aboutImage from '../../assets/pinkCakeAbout.webp';
 
 const About = () => {
   return (
-    <div className='max-w-[1320px] mx-auto py-12 px-6 md:py-20 flex flex-wrap items-center bg-white'>
+    <div 
+    id='about'
+    className='max-w-[1320px] mx-auto py-12 px-6 md:py-20 flex flex-wrap items-center bg-white'>
       
       <div className='w-full md:w-1/2 flex justify-center'>
         <img className='w-full h-auto object-cover rounded-xl shadow-lg border border-gray-200' src={aboutImage} alt="About Gabbata" />

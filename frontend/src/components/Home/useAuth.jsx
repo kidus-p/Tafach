@@ -61,7 +61,8 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(response.data));
         setUser(response.data.result);
-        closeModal();
+        toggleForm(); // Switch to login form
+        openModal(); // Open the modal
         setMessage(""); // Clear message
       }, 1000);
     } catch (error) {
@@ -70,6 +71,8 @@ export const AuthProvider = ({ children }) => {
       );
     }
   };
+  
+  
   
   const handleLogin = async (event) => {
     event.preventDefault();

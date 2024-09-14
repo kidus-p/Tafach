@@ -1,6 +1,6 @@
 const express = require("express");
 const route = express.Router();
-const { signup, login, logout, getUser, verifyEmail, refrashToken, updateProfile } = require("../controllers/userController");
+const { signup, login, logout, getUser, verifyEmail, refrashToken, updateProfile ,resetPassword ,requestPasswordReset, contactUs} = require("../controllers/userController");
 // const { authenticateToken } = require("../middleware/authMiddleware");
 const multer = require("multer");
 const path = require("path");
@@ -57,5 +57,14 @@ route.get("/getuser/:id", getUser);
 
 // Update user profile (bio, profile pic)
 route.put("/updateprofile/:id", upload.single('profilePicture'), updateProfile);
+
+// Request Password Reset
+route.post('/request-reset', requestPasswordReset);
+
+// Reset Password
+route.post('/reset-password/:token', resetPassword);
+
+// contact us
+route.post('/contact-us' , contactUs)
 
 module.exports = route;

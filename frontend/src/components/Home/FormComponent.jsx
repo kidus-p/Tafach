@@ -72,7 +72,7 @@ const FormComponent = ({
           Password
         </label>
         <input
-          id={`${id}-password`} // Unique id
+          id={`${id}-password`} 
           name="password"
           type="password"
           value={password}
