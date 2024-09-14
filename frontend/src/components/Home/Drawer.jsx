@@ -391,39 +391,60 @@ const Drawer = ({ isDrawerOpen, handleClose, user, handleLogout }) => {
                 {myRecipes.map((recipe) => (
                   <div
                     key={recipe._id}
-                    className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-transform duration-200"
-                    onClick={() => handleCardClick(recipe._id)}
+                    className="relative bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-xl"
                   >
                     <img
                       src={`${backendUrl}${recipe.recipeImage}`}
                       alt={recipe.title}
-                      className="w-full h-40 object-cover"
+                      className="w-full h-48 object-cover rounded-t-lg"
                     />
                     <div className="p-4">
                       <h2 className="text-xl font-semibold text-gray-800">
                         {recipe.title}
                       </h2>
-                      <p className="text-gray-600 mt-2">{recipe.description}</p>
-                      <div className="mt-4 flex space-x-4 justify-between">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleUpdateRecipe(recipe._id);
-                          }}
-                          className="text-blue-600 hover:underline"
+                      <p className="text-gray-600 mt-2 line-clamp-3">
+                        {recipe.description}
+                      </p>
+                    </div>
+                    <div className="absolute top-4 right-4 flex space-x-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleUpdateRecipe(recipe._id);
+                        }}
+                        className="text-blue-600 hover:text-blue-800 transition-colors"
+                        aria-label="Edit Recipe"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
                         >
-                          Edit
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteRecipe(recipe._id);
-                          }}
-                          className="text-red-600 hover:underline"
+                          <path d="M12 20h9M16.5 3.5a2.121 2.121 0 00-3 0l-9 9v3h3l9-9z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteRecipe(recipe._id);
+                        }}
+                        className="text-red-600 hover:text-red-800 transition-colors"
+                        aria-label="Delete Recipe"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
                         >
-                          Delete
-                        </button>
-                      </div>
+                          <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                 ))}
